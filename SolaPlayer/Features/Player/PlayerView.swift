@@ -128,6 +128,7 @@ struct PlayerView: View {
                 Button("返回", systemImage: "chevron.left", action: dismiss.callAsFunction)
                     .labelStyle(.iconOnly)
                     .foregroundStyle(.white)
+                    .tint(.white)
             }
             ToolbarItem(placement: .principal) {
                 Button(action: showQueue) {
@@ -155,6 +156,7 @@ struct PlayerView: View {
                         .foregroundStyle(.white)
                 }
                 .disabled(store.currentItem == nil)
+                .tint(.white)
             }
         }
         .sheet(item: $itemForGrouping) { item in
