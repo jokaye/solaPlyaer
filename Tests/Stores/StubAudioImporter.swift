@@ -24,6 +24,6 @@ struct StubAudioImporter: AudioImporting {
     func finalizeStagedAudioDeletion(_ deletion: StagedAudioDeletion) async throws {
     }
 
-    func purgeStagedAudioDeletions() async throws {
+    func reconcileStagedAudioDeletions(referencedLocalURLs: [URL]) async throws {
     }
 }

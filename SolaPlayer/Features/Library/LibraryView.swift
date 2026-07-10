@@ -140,7 +140,7 @@ struct LibraryView: View {
             await dismissRemovalAfterDelay(store.pendingRemoval)
         }
         .task {
-            await purgePendingFileDeletions()
+            await reconcilePendingFileDeletions()
         }
     }
 
@@ -273,9 +273,9 @@ struct LibraryView: View {
         }
     }
 
-    private func purgePendingFileDeletions() async {
+    private func reconcilePendingFileDeletions() async {
         do {
-            try await store.purgePendingFileDeletions()
+            try await store.reconcilePendingFileDeletions()
         } catch {
             present(error)
         }

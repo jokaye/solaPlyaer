@@ -6,7 +6,8 @@ actor ImportService: AudioImporting {
     private let fileManager: FileManager
     private let destinationDirectory: URL
 
-    init(fileManager: FileManager = .default, destinationDirectory: URL? = nil) throws {
+    init(destinationDirectory: URL? = nil) throws {
+        let fileManager = FileManager()
         self.fileManager = fileManager
 
         if let destinationDirectory {
@@ -75,37 +76,106 @@ actor ImportService: AudioImporting {
         }
 
         try fileManager.createDirectory(at: deletionStagingDirectory, withIntermediateDirectories: true)
-        let stagedURL = deletionStagingDirectory.appendingPathComponent(
-            UUID().uuidString,
-            conformingTo: .data
-        )
-        try fileManager.moveItem(at: localURL, to: stagedURL)
-        return StagedAudioDeletion(originalURL: localURL, stagedURL: stagedURL)
+        let directoryURL = deletionStagingDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let stagedURL = directoryURL.appendingPathComponent("payload", isDirectory: false)
+        let metadataURL = directoryURL.appendingPathComponent("metadata.plist", isDirectory: false)
+
+        try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: false)
+        do {
+            let metadata = StagedDeletionMetadata(originalPath: localURL.standardizedFileURL.path)
+            let metadataData = try PropertyListEncoder().encode(metadata)
+            try metadataData.write(to: metadataURL, options: .atomic)
+            try fileManager.moveItem(at: localURL, to: stagedURL)
+            return StagedAudioDeletion(
+                originalURL: localURL,
+                stagedURL: stagedURL,
+                directoryURL: directoryURL
+            )
+        } catch let stagingError {
+            do {
+                try fileManager.removeItem(at: directoryURL)
+            } catch let cleanupError {
+                throw AudioImportError.cleanupFailed(
+                    path: directoryURL.path,
+                    reason: "\(stagingError.localizedDescription); \(cleanupError.localizedDescription)"
+                )
+            }
+            throw stagingError
+        }
     }
 
     func restoreStagedAudio(_ deletion: StagedAudioDeletion) async throws {
-        guard fileManager.fileExists(atPath: deletion.stagedURL.path) else {
+        if fileManager.fileExists(atPath: deletion.originalURL.path) {
+            try removeStagingDirectoryIfPresent(deletion.directoryURL)
             return
         }
-        guard fileManager.fileExists(atPath: deletion.originalURL.path) == false else {
-            throw CocoaError(.fileWriteFileExists)
+        guard fileManager.fileExists(atPath: deletion.stagedURL.path) else {
+            throw CocoaError(.fileNoSuchFile)
         }
         try fileManager.moveItem(at: deletion.stagedURL, to: deletion.originalURL)
+        try removeStagingDirectoryIfPresent(deletion.directoryURL)
     }
 
     func finalizeStagedAudioDeletion(_ deletion: StagedAudioDeletion) async throws {
-        try await removeImportedAudio(at: deletion.stagedURL)
+        try await removeImportedAudio(at: deletion.originalURL)
+        try removeStagingDirectoryIfPresent(deletion.directoryURL)
     }
 
-    func purgeStagedAudioDeletions() async throws {
+    func reconcileStagedAudioDeletions(referencedLocalURLs: [URL]) async throws {
         guard fileManager.fileExists(atPath: deletionStagingDirectory.path) else {
             return
         }
-        try fileManager.removeItem(at: deletionStagingDirectory)
+
+        let referencedPaths = Set(referencedLocalURLs.map { $0.standardizedFileURL.path })
+        let stagedDirectories = try fileManager.contentsOfDirectory(
+            at: deletionStagingDirectory,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        )
+        for directoryURL in stagedDirectories {
+            let values = try directoryURL.resourceValues(forKeys: [.isDirectoryKey])
+            guard values.isDirectory == true else {
+                throw CocoaError(.fileReadCorruptFile)
+            }
+
+            let deletion = try stagedDeletion(in: directoryURL)
+            if referencedPaths.contains(deletion.originalURL.standardizedFileURL.path) {
+                try await restoreStagedAudio(deletion)
+            } else {
+                try await finalizeStagedAudioDeletion(deletion)
+            }
+        }
+
+        if try fileManager.contentsOfDirectory(atPath: deletionStagingDirectory.path).isEmpty {
+            try fileManager.removeItem(at: deletionStagingDirectory)
+        }
     }
 
     private var deletionStagingDirectory: URL {
         destinationDirectory.appendingPathComponent(".Trash", isDirectory: true)
+    }
+
+    private func stagedDeletion(in directoryURL: URL) throws -> StagedAudioDeletion {
+        let metadataURL = directoryURL.appendingPathComponent("metadata.plist", isDirectory: false)
+        let stagedURL = directoryURL.appendingPathComponent("payload", isDirectory: false)
+        let metadataData = try Data(contentsOf: metadataURL)
+        let metadata = try PropertyListDecoder().decode(
+            StagedDeletionMetadata.self,
+            from: metadataData
+        )
+        return StagedAudioDeletion(
+            originalURL: URL(fileURLWithPath: metadata.originalPath),
+            stagedURL: stagedURL,
+            directoryURL: directoryURL
+        )
+    }
+
+    private func removeStagingDirectoryIfPresent(_ directoryURL: URL) throws {
+        guard fileManager.fileExists(atPath: directoryURL.path) else {
+            return
+        }
+        try fileManager.removeItem(at: directoryURL)
     }
 
     private func importAudioFile(from sourceURL: URL) async throws -> ImportedAudio {

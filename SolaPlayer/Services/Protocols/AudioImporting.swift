@@ -6,5 +6,5 @@ protocol AudioImporting: Sendable {
     func stageImportedAudioForDeletion(at localURL: URL) async throws -> StagedAudioDeletion?
     func restoreStagedAudio(_ deletion: StagedAudioDeletion) async throws
     func finalizeStagedAudioDeletion(_ deletion: StagedAudioDeletion) async throws
-    func purgeStagedAudioDeletions() async throws
+    func reconcileStagedAudioDeletions(referencedLocalURLs: [URL]) async throws
 }

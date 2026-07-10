@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D9843C4799862D8265EC1B3 /* ImportServiceDeletionRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6F4B30743BCDD6B21E4D5D /* ImportServiceDeletionRecoveryTests.swift */; };
 		0F1B2642FCCCE31F48C22C7A /* TestFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2F1DA294C9294ECFCC32FD /* TestFailure.swift */; };
 		1868F022B42EB4ECCE15918F /* PresentedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A13AC52940D556A610E40E08 /* PresentedError.swift */; };
 		20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6034A78883513C490A17ED /* AboutView.swift */; };
@@ -35,6 +36,7 @@
 		81225DA6444B37DC1CA142EE /* GroupPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */; };
 		82D1BBCCE8BFE6EF7EB2862E /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B587481DAFA171EC600C9C57 /* AppModelContainer.swift */; };
 		85A8F8C2E7B82040160820DD /* LibraryStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C42FC39930C888A8C33949 /* LibraryStoreError.swift */; };
+		86330C2B5028F4B2AB66857A /* StagedDeletionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82966DCFEDFE05948DE22A2E /* StagedDeletionMetadata.swift */; };
 		8653C612419389E246B92B0F /* SolaPlayerSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A781C07C468A8AE958B510E /* SolaPlayerSchemaV1.swift */; };
 		97858FA5C2833ECDAA24598D /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */; };
 		982024D146A24FA14EDBBC5D /* AudioImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2712F1596A389791793E2E /* AudioImportError.swift */; };
@@ -104,6 +106,7 @@
 		7D2F1DA294C9294ECFCC32FD /* TestFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFailure.swift; sourceTree = "<group>"; };
 		7FD9DF2B2B42A032B0E228AA /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		80C42FC39930C888A8C33949 /* LibraryStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStoreError.swift; sourceTree = "<group>"; };
+		82966DCFEDFE05948DE22A2E /* StagedDeletionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StagedDeletionMetadata.swift; sourceTree = "<group>"; };
 		840B3C14FF6253CA3EA07E96 /* AppRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRadius.swift; sourceTree = "<group>"; };
 		8501C73D6DEDC36CBF0B93DC /* ImportedAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedAudio.swift; sourceTree = "<group>"; };
 		89B6CA558F695C9DF64AA359 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
@@ -130,6 +133,7 @@
 		EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontModifier.swift; sourceTree = "<group>"; };
 		FA675418CC557FFB44DAFF28 /* ImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportService.swift; sourceTree = "<group>"; };
 		FB17569069DA689E6A1E6BB3 /* StubAudioImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubAudioImporter.swift; sourceTree = "<group>"; };
+		FE6F4B30743BCDD6B21E4D5D /* ImportServiceDeletionRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportServiceDeletionRecoveryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -215,6 +219,14 @@
 			path = DesignSystem;
 			sourceTree = "<group>";
 		};
+		71A0097F44D3307607A88542 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FE6F4B30743BCDD6B21E4D5D /* ImportServiceDeletionRecoveryTests.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		7952C519E4DF1FFC0691C080 /* Stores */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +293,7 @@
 		C1B3D409C38DAFF2137533A4 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				71A0097F44D3307607A88542 /* Services */,
 				7952C519E4DF1FFC0691C080 /* Stores */,
 			);
 			path = Tests;
@@ -306,6 +319,7 @@
 				FA675418CC557FFB44DAFF28 /* ImportService.swift */,
 				7FD9DF2B2B42A032B0E228AA /* PersistenceService.swift */,
 				98D36E80530AA4EFF3A67CD5 /* StagedAudioDeletion.swift */,
+				82966DCFEDFE05948DE22A2E /* StagedDeletionMetadata.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -450,6 +464,7 @@
 			files = (
 				A4EFCB41D968301E2A086ADE /* DeletionTrackingImporter.swift in Sources */,
 				EE6E17B800D6AC58B2A319EA /* FailingPersistence.swift in Sources */,
+				0D9843C4799862D8265EC1B3 /* ImportServiceDeletionRecoveryTests.swift in Sources */,
 				544BEF9816CC3D20A4B98F96 /* LibraryStoreTests.swift in Sources */,
 				77D3C76A14F3F44CF8D6ECAF /* LibraryTestContext.swift in Sources */,
 				B62D1E90CCFEEB4FC02E142C /* StubAudioImporter.swift in Sources */,
@@ -503,6 +518,7 @@
 				B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */,
 				8653C612419389E246B92B0F /* SolaPlayerSchemaV1.swift in Sources */,
 				B458E8EC05A3E296B136F46C /* StagedAudioDeletion.swift in Sources */,
+				86330C2B5028F4B2AB66857A /* StagedDeletionMetadata.swift in Sources */,
 				210D94B9D8B1BFE277B63BBA /* TimeInterval+DurationText.swift in Sources */,
 				ED353D4A6082CAA84DD73C4F /* TrackRowView.swift in Sources */,
 				D33BB3D0302ED9998ED37620 /* UndoSnackbar.swift in Sources */,

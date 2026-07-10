@@ -251,8 +251,8 @@ struct LibraryStoreTests {
         }
 
         #expect(store.items.isEmpty)
-        try await store.purgePendingFileDeletions()
-        let purgeCount = await importer.purgeCount
-        #expect(purgeCount == 1)
+        try await store.reconcilePendingFileDeletions()
+        let reconcileCount = await importer.reconcileCount
+        #expect(reconcileCount == 1)
     }
 }

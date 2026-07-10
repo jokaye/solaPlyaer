@@ -5,7 +5,7 @@ actor DeletionTrackingImporter: AudioImporting {
     let imports: [URL: ImportedAudio]
     private(set) var restoreCount = 0
     private(set) var finalizeCount = 0
-    private(set) var purgeCount = 0
+    private(set) var reconcileCount = 0
     let failFinalization: Bool
 
     init(imports: [URL: ImportedAudio], failFinalization: Bool = false) {
@@ -26,7 +26,8 @@ actor DeletionTrackingImporter: AudioImporting {
     func stageImportedAudioForDeletion(at localURL: URL) async throws -> StagedAudioDeletion? {
         StagedAudioDeletion(
             originalURL: localURL,
-            stagedURL: localURL.appendingPathExtension("staged")
+            stagedURL: localURL.appendingPathExtension("staged"),
+            directoryURL: localURL.appendingPathExtension("staging-directory")
         )
     }
 
@@ -41,7 +42,7 @@ actor DeletionTrackingImporter: AudioImporting {
         }
     }
 
-    func purgeStagedAudioDeletions() async throws {
-        purgeCount += 1
+    func reconcileStagedAudioDeletions(referencedLocalURLs: [URL]) async throws {
+        reconcileCount += 1
     }
 }

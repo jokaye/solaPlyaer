@@ -104,8 +104,10 @@ final class LibraryStore {
         }
     }
 
-    func purgePendingFileDeletions() async throws {
-        try await importer.purgeStagedAudioDeletions()
+    func reconcilePendingFileDeletions() async throws {
+        try await importer.reconcileStagedAudioDeletions(
+            referencedLocalURLs: items.compactMap(\.localCopyURL)
+        )
     }
 
     @discardableResult
