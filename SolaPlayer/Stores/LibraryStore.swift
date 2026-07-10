@@ -80,36 +80,47 @@ final class LibraryStore {
         defer { isImporting = false }
 
         for url in urls {
-            let imported = try await importer.importAudio(from: url)
-            let item = AudioItem(
-                title: imported.title,
-                bookmark: imported.bookmark,
-                localCopyURL: imported.localCopyURL,
-                duration: imported.duration,
-                masterOrder: nextMasterOrder
-            )
-            persistence.insert(item)
+            let importedFiles = try await importer.importAudio(from: url)
+            var order = nextMasterOrder
+            for imported in importedFiles {
+                persistence.insert(
+                    AudioItem(
+                        title: imported.title,
+                        bookmark: imported.bookmark,
+                        localCopyURL: imported.localCopyURL,
+                        duration: imported.duration,
+                        masterOrder: order
+                    )
+                )
+                order += 1
+            }
 
             do {
                 try saveAndReload()
             } catch let persistenceError {
-                do {
-                    try await importer.removeImportedAudio(at: imported.localCopyURL)
-                } catch let cleanupError {
-                    throw LibraryStoreError.fileCleanupFailed(
-                        path: imported.localCopyURL.path,
-                        reason: "\(persistenceError.localizedDescription); \(cleanupError.localizedDescription)"
-                    )
-                }
+                try await cleanupImportedFiles(importedFiles, after: persistenceError)
                 throw persistenceError
             }
         }
     }
 
+    func purgePendingFileDeletions() async throws {
+        try await importer.purgeStagedAudioDeletions()
+    }
+
     @discardableResult
-    func createGroup(name: String, colorKey: String? = nil) throws -> AudioGroup {
+    func createGroup(
+        name: String,
+        colorKey: String? = nil,
+        adding items: [AudioItem] = []
+    ) throws -> AudioGroup {
         let normalizedName = try validatedGroupName(name, excluding: nil)
         try validatePaletteKey(colorKey)
+        var seenItemIDs = Set<UUID>()
+        let uniqueItems = items.filter { seenItemIDs.insert($0.id).inserted }
+        guard uniqueItems.allSatisfy({ item in self.items.contains(where: { $0.id == item.id }) }) else {
+            throw LibraryStoreError.itemNotFound
+        }
 
         let group = AudioGroup(
             name: normalizedName,
@@ -117,6 +128,11 @@ final class LibraryStore {
             chipOrder: nextGroupOrder
         )
         persistence.insert(group)
+        for (index, item) in uniqueItems.enumerated() {
+            persistence.insert(
+                Membership(group: group, item: item, orderInGroup: index)
+            )
+        }
         try saveAndReload()
         return group
     }
@@ -233,10 +249,13 @@ final class LibraryStore {
         guard let removal = pendingRemoval else {
             return
         }
-        guard let item = items.first(where: { $0.id == removal.itemID }),
-              let group = groups.first(where: { $0.id == removal.groupID }) else {
+        guard let group = groups.first(where: { $0.id == removal.groupID }) else {
             pendingRemoval = nil
             throw LibraryStoreError.groupNotFound
+        }
+        guard let item = items.first(where: { $0.id == removal.itemID }) else {
+            pendingRemoval = nil
+            throw LibraryStoreError.itemNotFound
         }
         guard isMember(item, of: group) == false else {
             pendingRemoval = nil
@@ -299,16 +318,35 @@ final class LibraryStore {
 
     func deleteItem(_ item: AudioItem) async throws {
         try ensureItemExists(item)
-        let localCopyURL = item.localCopyURL
-        persistence.delete(item)
-        try saveAndReload()
+        let stagedDeletion: StagedAudioDeletion?
+        if let localCopyURL = item.localCopyURL {
+            stagedDeletion = try await importer.stageImportedAudioForDeletion(at: localCopyURL)
+        } else {
+            stagedDeletion = nil
+        }
 
-        if let localCopyURL {
+        persistence.delete(item)
+        do {
+            try saveAndReload()
+        } catch let persistenceError {
+            if let stagedDeletion {
+                do {
+                    try await importer.restoreStagedAudio(stagedDeletion)
+                } catch let restoreError {
+                    throw LibraryStoreError.recoveryFailed(
+                        reason: "\(persistenceError.localizedDescription); \(restoreError.localizedDescription)"
+                    )
+                }
+            }
+            throw persistenceError
+        }
+
+        if let stagedDeletion {
             do {
-                try await importer.removeImportedAudio(at: localCopyURL)
+                try await importer.finalizeStagedAudioDeletion(stagedDeletion)
             } catch {
                 throw LibraryStoreError.fileCleanupFailed(
-                    path: localCopyURL.path,
+                    path: stagedDeletion.stagedURL.path,
                     reason: error.localizedDescription
                 )
             }
@@ -345,6 +383,26 @@ final class LibraryStore {
     private func ensureItemExists(_ item: AudioItem) throws {
         guard items.contains(where: { $0.id == item.id }) else {
             throw LibraryStoreError.itemNotFound
+        }
+    }
+
+    private func cleanupImportedFiles(
+        _ importedFiles: [ImportedAudio],
+        after persistenceError: Error
+    ) async throws {
+        var failures: [String] = []
+        for importedFile in importedFiles {
+            do {
+                try await importer.removeImportedAudio(at: importedFile.localCopyURL)
+            } catch {
+                failures.append(error.localizedDescription)
+            }
+        }
+        if failures.isEmpty == false {
+            throw LibraryStoreError.fileCleanupFailed(
+                path: importedFiles.map(\.localCopyURL.path).joined(separator: ", "),
+                reason: "\(persistenceError.localizedDescription); \(failures.joined(separator: "; "))"
+            )
         }
     }
 

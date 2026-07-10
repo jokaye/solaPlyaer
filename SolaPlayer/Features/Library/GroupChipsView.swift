@@ -71,6 +71,7 @@ struct GroupChipsView: View {
             titleVisibility: .visible
         ) {
             Button("删除分组", role: .destructive, action: deleteGroup)
+            Button("取消", role: .cancel, action: cancelGroupDeletion)
         } message: {
             Text("组内音频仍会保留在默认列表。")
         }
@@ -110,5 +111,10 @@ struct GroupChipsView: View {
         } catch {
             onError(error)
         }
+    }
+
+    private func cancelGroupDeletion() {
+        groupToDelete = nil
+        isShowingDeleteConfirmation = false
     }
 }

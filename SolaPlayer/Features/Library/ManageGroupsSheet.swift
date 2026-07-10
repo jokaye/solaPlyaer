@@ -3,7 +3,7 @@ import SwiftUI
 struct ManageGroupsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var store: LibraryStore
-    let onError: (Error) -> Void
+    @State private var presentedError: PresentedError?
 
     var body: some View {
         NavigationStack {
@@ -21,6 +21,9 @@ struct ManageGroupsSheet: View {
                     Button("完成", action: dismiss.callAsFunction)
                 }
             }
+            .alert(item: $presentedError) { error in
+                Alert(title: Text("无法调整顺序"), message: Text(error.message))
+            }
         }
     }
 
@@ -28,7 +31,7 @@ struct ManageGroupsSheet: View {
         do {
             try store.reorderGroups(fromOffsets: fromOffsets, toOffset: toOffset)
         } catch {
-            onError(error)
+            presentedError = PresentedError(error)
         }
     }
 }

@@ -37,16 +37,16 @@ struct LibraryView: View {
             }
 
             Section(store.scopeName) {
-                if store.visibleItems.isEmpty {
-                    if store.scope == .master {
-                        ImportCardView(action: showImporter)
-                    } else {
-                        ContentUnavailableView(
-                            "分组还没有音频",
-                            systemImage: "music.note.list",
-                            description: Text("从默认列表选择音频并加入这个分组。")
-                        )
-                    }
+                if store.scope == .master {
+                    ImportCardView(action: showImporter)
+                }
+
+                if store.visibleItems.isEmpty, store.scope != .master {
+                    ContentUnavailableView(
+                        "分组还没有音频",
+                        systemImage: "music.note.list",
+                        description: Text("从默认列表选择音频并加入这个分组。")
+                    )
                 } else {
                     ForEach(store.visibleItems) { item in
                         TrackRowView(
@@ -65,7 +65,7 @@ struct LibraryView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("音库")
+        .navigationTitle("")
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if store.visibleItems.isEmpty == false {
@@ -92,7 +92,7 @@ struct LibraryView: View {
         }
         .fileImporter(
             isPresented: $isShowingImporter,
-            allowedContentTypes: [.audio],
+            allowedContentTypes: [.audio, .folder],
             allowsMultipleSelection: true,
             onCompletion: handleImportResult
         )
@@ -103,7 +103,7 @@ struct LibraryView: View {
             }
         }
         .sheet(isPresented: $isManagingGroups) {
-            ManageGroupsSheet(store: store, onError: present)
+            ManageGroupsSheet(store: store)
         }
         .sheet(item: $groupPickerRequest) { request in
             GroupPickerSheet(store: store, items: request.items)
@@ -119,6 +119,7 @@ struct LibraryView: View {
             titleVisibility: .visible
         ) {
             Button("彻底删除", role: .destructive, action: deleteConfirmedItem)
+            Button("取消", role: .cancel, action: cancelItemDeletion)
         } message: {
             Text("音频会从默认列表和所有分组中移除，此操作不可撤销。")
         }
@@ -137,6 +138,9 @@ struct LibraryView: View {
         }
         .task(id: store.pendingRemoval?.id) {
             await dismissRemovalAfterDelay(store.pendingRemoval)
+        }
+        .task {
+            await purgePendingFileDeletions()
         }
     }
 
@@ -247,6 +251,11 @@ struct LibraryView: View {
         }
     }
 
+    private func cancelItemDeletion() {
+        itemToDelete = nil
+        isShowingDeleteConfirmation = false
+    }
+
     private func present(_ error: Error) {
         presentedError = PresentedError(error)
     }
@@ -261,6 +270,14 @@ struct LibraryView: View {
         }
         withAnimation {
             store.dismissPendingRemoval(id: removal.id)
+        }
+    }
+
+    private func purgePendingFileDeletions() async {
+        do {
+            try await store.purgePendingFileDeletions()
+        } catch {
+            present(error)
         }
     }
 }

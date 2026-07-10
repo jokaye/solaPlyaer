@@ -20,6 +20,5 @@ struct UndoSnackbar: View {
         .foregroundStyle(.white)
         .background(AppColor.ink, in: .rect(cornerRadius: AppRadius.glassBar))
         .shadow(color: .black.opacity(0.16), radius: 16, y: 6)
-        .accessibilityElement(children: .combine)
     }
 }

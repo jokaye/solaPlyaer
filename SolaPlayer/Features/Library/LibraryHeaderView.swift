@@ -8,6 +8,7 @@ struct LibraryHeaderView: View {
         VStack(alignment: .leading, spacing: AppSpacing.small) {
             Text("音库")
                 .appFont(AppTypography.libraryTitle)
+                .accessibilityAddTraits(.isHeader)
 
             Text("\(itemCount) 段音频 · \(groupCount) 个分组")
                 .font(.subheadline)

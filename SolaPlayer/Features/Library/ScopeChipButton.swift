@@ -11,6 +11,7 @@ struct ScopeChipButton: View {
             HStack(spacing: 6) {
                 if isSelected {
                     Image(systemName: "checkmark")
+                        .accessibilityHidden(true)
                 } else if let accentColor {
                     Circle()
                         .fill(accentColor)

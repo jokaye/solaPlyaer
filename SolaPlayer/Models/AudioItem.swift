@@ -16,9 +16,6 @@ final class AudioItem {
     @Relationship(deleteRule: .cascade, inverse: \Membership.item)
     var memberships: [Membership] = []
 
-    @Relationship(deleteRule: .cascade, inverse: \Marker.owner)
-    var markers: [Marker] = []
-
     init(
         id: UUID = UUID(),
         title: String,

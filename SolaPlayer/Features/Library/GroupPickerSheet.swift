@@ -30,12 +30,15 @@ struct GroupPickerSheet: View {
                                 if allItemsAreMembers(of: group) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundStyle(AppColor.ink)
+                                        .accessibilityHidden(true)
                                 } else if anyItemIsMember(of: group) {
                                     Image(systemName: "minus.circle.fill")
                                         .foregroundStyle(.secondary)
+                                        .accessibilityHidden(true)
                                 } else {
                                     Image(systemName: "circle")
                                         .foregroundStyle(.tertiary)
+                                        .accessibilityHidden(true)
                                 }
                             }
                         }
@@ -54,8 +57,7 @@ struct GroupPickerSheet: View {
             }
             .sheet(isPresented: $isCreatingGroup) {
                 NameEditorSheet(title: "新建分组", initialName: "") { name in
-                    let group = try store.createGroup(name: name)
-                    try store.add(items, to: [group])
+                    _ = try store.createGroup(name: name, adding: items)
                 }
             }
             .alert(item: $presentedError) { error in

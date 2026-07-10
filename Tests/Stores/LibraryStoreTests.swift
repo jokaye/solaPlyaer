@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 import Testing
 @testable import SolaPlayer
 
@@ -87,7 +88,7 @@ struct LibraryStoreTests {
     }
 
     @MainActor
-    @Test("分组顺序和颜色可持久更新")
+    @Test("分组顺序和颜色可更新")
     func groupMetadataCanBeUpdated() throws {
         let context = try LibraryTestContext(titles: [])
         let first = try context.store.createGroup(name: "第一组")
@@ -99,5 +100,159 @@ struct LibraryStoreTests {
 
         #expect(context.store.groups.map(\.name) == ["第二组", "第三组", "第一组"])
         #expect(context.store.groups.last?.colorKey == AppPalette.lake.rawValue)
+    }
+
+    @MainActor
+    @Test("磁盘容器重建后仍能读取音频和分组")
+    func persistenceSurvivesContainerRecreation() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer {
+            do {
+                try FileManager.default.removeItem(at: directory)
+            } catch {
+                Issue.record("无法清理测试目录：\(error.localizedDescription)")
+            }
+        }
+
+        let storeURL = directory.appendingPathComponent("SolaPlayer.store")
+        let sourceURL = URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a")
+        let imported = ImportedAudio(
+            title: "持久化测试",
+            bookmark: Data([1]),
+            localCopyURL: URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a"),
+            duration: 90
+        )
+
+        do {
+            let container = try AppModelContainer.make(storeURL: storeURL)
+            let persistence = PersistenceService(modelContext: container.mainContext)
+            let store = try LibraryStore(
+                persistence: persistence,
+                importer: StubAudioImporter(imports: [sourceURL: imported])
+            )
+            try await store.importFiles([sourceURL])
+            _ = try store.createGroup(name: "跨启动分组", adding: store.items)
+        }
+
+        do {
+            let container = try AppModelContainer.make(storeURL: storeURL)
+            let persistence = PersistenceService(modelContext: container.mainContext)
+            let store = try LibraryStore(
+                persistence: persistence,
+                importer: StubAudioImporter(imports: [:])
+            )
+            let group = try #require(store.groups.first)
+
+            #expect(store.items.map(\.title) == ["持久化测试"])
+            #expect(store.groups.map(\.name) == ["跨启动分组"])
+            #expect(store.items(in: .group(group.id)).map(\.title) == ["持久化测试"])
+        }
+    }
+
+    @MainActor
+    @Test("新建并加入在保存失败时整体回滚")
+    func createGroupAndAddRollsBackTogether() async throws {
+        let container = try AppModelContainer.make(inMemory: true)
+        let sourceURL = URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a")
+        let imported = ImportedAudio(
+            title: "事务测试",
+            bookmark: Data([1]),
+            localCopyURL: URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a"),
+            duration: 30
+        )
+        let base = PersistenceService(modelContext: container.mainContext)
+        let persistence = FailingPersistence(base: base)
+        let store = try LibraryStore(
+            persistence: persistence,
+            importer: StubAudioImporter(imports: [sourceURL: imported])
+        )
+        try await store.importFiles([sourceURL])
+        let item = try #require(store.items.first)
+        persistence.failNextSave = true
+
+        do {
+            _ = try store.createGroup(name: "不应残留", adding: [item])
+            Issue.record("预期保存失败。")
+        } catch TestFailure.saveFailed {
+        } catch {
+            Issue.record("收到错误类型不正确：\(error.localizedDescription)")
+        }
+
+        #expect(store.groups.isEmpty)
+        #expect(store.membershipCount(for: item) == 0)
+    }
+
+    @MainActor
+    @Test("删除保存失败时恢复暂存文件和数据")
+    func failedDeleteRestoresStagedFileAndItem() async throws {
+        let container = try AppModelContainer.make(inMemory: true)
+        let sourceURL = URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a")
+        let imported = ImportedAudio(
+            title: "删除补偿测试",
+            bookmark: Data([1]),
+            localCopyURL: URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a"),
+            duration: 45
+        )
+        let base = PersistenceService(modelContext: container.mainContext)
+        let persistence = FailingPersistence(base: base)
+        let importer = DeletionTrackingImporter(imports: [sourceURL: imported])
+        let store = try LibraryStore(persistence: persistence, importer: importer)
+        try await store.importFiles([sourceURL])
+        let item = try #require(store.items.first)
+        persistence.failNextSave = true
+
+        do {
+            try await store.deleteItem(item)
+            Issue.record("预期保存失败。")
+        } catch TestFailure.saveFailed {
+        } catch {
+            Issue.record("收到错误类型不正确：\(error.localizedDescription)")
+        }
+
+        let restoreCount = await importer.restoreCount
+        let finalizeCount = await importer.finalizeCount
+        #expect(store.items.map(\.id) == [item.id])
+        #expect(restoreCount == 1)
+        #expect(finalizeCount == 0)
+    }
+
+    @MainActor
+    @Test("最终文件清理失败会报错并可在之后重试清理")
+    func cleanupFailureRemainsRetryable() async throws {
+        let container = try AppModelContainer.make(inMemory: true)
+        let sourceURL = URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a")
+        let imported = ImportedAudio(
+            title: "清理重试测试",
+            bookmark: Data([1]),
+            localCopyURL: URL(fileURLWithPath: "/tmp/\(UUID().uuidString).m4a"),
+            duration: 50
+        )
+        let persistence = PersistenceService(modelContext: container.mainContext)
+        let importer = DeletionTrackingImporter(
+            imports: [sourceURL: imported],
+            failFinalization: true
+        )
+        let store = try LibraryStore(persistence: persistence, importer: importer)
+        try await store.importFiles([sourceURL])
+        let item = try #require(store.items.first)
+
+        do {
+            try await store.deleteItem(item)
+            Issue.record("预期最终文件清理失败。")
+        } catch let error as LibraryStoreError {
+            guard case .fileCleanupFailed = error else {
+                Issue.record("收到 LibraryStoreError，但不是文件清理失败。")
+                return
+            }
+        } catch {
+            Issue.record("收到错误类型不正确：\(error.localizedDescription)")
+        }
+
+        #expect(store.items.isEmpty)
+        try await store.purgePendingFileDeletions()
+        let purgeCount = await importer.purgeCount
+        #expect(purgeCount == 1)
     }
 }

@@ -9,7 +9,7 @@ struct ImportCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("导入第一段音频")
                         .font(.headline)
-                    Text("文件 · AirDrop")
+                    Text("文件或文件夹 · AirDrop")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -27,6 +27,7 @@ struct ImportCardView: View {
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.card)
                 .stroke(.secondary.opacity(0.4), style: StrokeStyle(lineWidth: 1.5, dash: [6]))
+                .allowsHitTesting(false)
         }
         .accessibilityHint("打开系统文件选择器")
     }

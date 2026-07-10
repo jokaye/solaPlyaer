@@ -2,6 +2,7 @@ import Foundation
 
 enum AudioImportError: LocalizedError, Equatable {
     case unsupportedFile
+    case noAudioFilesInFolder
     case destinationUnavailable
     case emptyTitle
     case invalidDuration
@@ -11,6 +12,8 @@ enum AudioImportError: LocalizedError, Equatable {
         switch self {
         case .unsupportedFile:
             "请选择有效的音频文件。"
+        case .noAudioFilesInFolder:
+            "所选文件夹中没有可导入的音频。"
         case .destinationUnavailable:
             "无法访问应用的音频存储目录。"
         case .emptyTitle:
