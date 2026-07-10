@@ -64,4 +64,46 @@ struct ImportServiceDeletionRecoveryTests {
             Issue.record("收到错误类型不正确：\(error.localizedDescription)")
         }
     }
+
+    @Test("越界删除元数据被拒绝且不会删除其他文件")
+    func outOfBoundsMetadataCannotDeleteFiles() async throws {
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let audioDirectory = directory.appendingPathComponent("Audio", isDirectory: true)
+        let stagedDirectory = audioDirectory
+            .appendingPathComponent(".Trash", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: stagedDirectory, withIntermediateDirectories: true)
+        defer {
+            do {
+                try FileManager.default.removeItem(at: directory)
+            } catch {
+                Issue.record("无法清理测试目录：\(error.localizedDescription)")
+            }
+        }
+
+        let protectedURL = directory.appendingPathComponent("must-not-delete.txt")
+        try Data("protected".utf8).write(to: protectedURL)
+        let metadata = StagedDeletionMetadata(originalPath: protectedURL.path)
+        let metadataData = try PropertyListEncoder().encode(metadata)
+        try metadataData.write(
+            to: stagedDirectory.appendingPathComponent("metadata.plist"),
+            options: .atomic
+        )
+        try Data("payload".utf8).write(
+            to: stagedDirectory.appendingPathComponent("payload")
+        )
+
+        let service = try ImportService(destinationDirectory: audioDirectory)
+        do {
+            try await service.reconcileStagedAudioDeletions(referencedLocalURLs: [])
+            Issue.record("预期越界元数据被拒绝。")
+        } catch let error as CocoaError {
+            #expect(error.code == .fileReadCorruptFile)
+        } catch {
+            Issue.record("收到错误类型不正确：\(error.localizedDescription)")
+        }
+
+        #expect(FileManager.default.fileExists(atPath: protectedURL.path))
+    }
 }

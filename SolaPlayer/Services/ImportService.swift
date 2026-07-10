@@ -71,6 +71,9 @@ actor ImportService: AudioImporting {
     }
 
     func stageImportedAudioForDeletion(at localURL: URL) async throws -> StagedAudioDeletion? {
+        guard isManagedAudioURL(localURL) else {
+            throw AudioImportError.unmanagedFile
+        }
         guard fileManager.fileExists(atPath: localURL.path) else {
             return nil
         }
@@ -157,6 +160,10 @@ actor ImportService: AudioImporting {
     }
 
     private func stagedDeletion(in directoryURL: URL) throws -> StagedAudioDeletion {
+        guard directoryURL.deletingLastPathComponent().standardizedFileURL
+            == deletionStagingDirectory.standardizedFileURL else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
         let metadataURL = directoryURL.appendingPathComponent("metadata.plist", isDirectory: false)
         let stagedURL = directoryURL.appendingPathComponent("payload", isDirectory: false)
         let metadataData = try Data(contentsOf: metadataURL)
@@ -164,11 +171,20 @@ actor ImportService: AudioImporting {
             StagedDeletionMetadata.self,
             from: metadataData
         )
+        let originalURL = URL(fileURLWithPath: metadata.originalPath).standardizedFileURL
+        guard isManagedAudioURL(originalURL) else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
         return StagedAudioDeletion(
-            originalURL: URL(fileURLWithPath: metadata.originalPath),
+            originalURL: originalURL,
             stagedURL: stagedURL,
             directoryURL: directoryURL
         )
+    }
+
+    private func isManagedAudioURL(_ url: URL) -> Bool {
+        url.standardizedFileURL.deletingLastPathComponent()
+            == destinationDirectory.standardizedFileURL
     }
 
     private func removeStagingDirectoryIfPresent(_ directoryURL: URL) throws {

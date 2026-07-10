@@ -4,6 +4,7 @@ enum AudioImportError: LocalizedError, Equatable {
     case unsupportedFile
     case noAudioFilesInFolder
     case destinationUnavailable
+    case unmanagedFile
     case emptyTitle
     case invalidDuration
     case cleanupFailed(path: String, reason: String)
@@ -16,6 +17,8 @@ enum AudioImportError: LocalizedError, Equatable {
             "所选文件夹中没有可导入的音频。"
         case .destinationUnavailable:
             "无法访问应用的音频存储目录。"
+        case .unmanagedFile:
+            "拒绝操作音频存储目录之外的文件。"
         case .emptyTitle:
             "音频文件名不能为空。"
         case .invalidDuration:
