@@ -5,7 +5,7 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
-            Section("播放页主题") {
+            Section {
                 ForEach(AppPalette.allCases) { palette in
                     Button(action: { select(palette) }) {
                         HStack(spacing: AppSpacing.standard) {
@@ -35,6 +35,8 @@ struct SettingsView: View {
                         globalPaletteKey == palette.rawValue ? "已选择" : "未选择"
                     )
                 }
+            } header: {
+                Text("播放页主题")
             } footer: {
                 Text("全局主题用于所有未设置单曲主题的音频。单曲主题可在音库的曲目菜单中覆盖。")
             }
