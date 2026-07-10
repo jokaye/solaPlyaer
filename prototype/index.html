@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sola Player · Prototype</title>
+<style>
+  :root {
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ink: #0d0f14;
+    --glass: rgba(255,255,255,0.14);
+    --glass-strong: rgba(255,255,255,0.24);
+    --hair: rgba(255,255,255,0.18);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; height: 100%;
+    font-family: -apple-system, "SF Pro Display", "Segoe UI", Roboto, "PingFang SC", sans-serif;
+    background: radial-gradient(120% 120% at 50% 0%, #23272f 0%, #14161b 60%, #0b0c10 100%);
+    color: #fff; display: grid; place-items: center;
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage { display: flex; gap: 48px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 40px; }
+  .caption { max-width: 300px; color: #aeb4c0; font-size: 13px; line-height: 1.7; }
+  .caption h1 { color: #fff; font-size: 22px; font-weight: 300; letter-spacing: .5px; margin: 0 0 4px; }
+  .caption b { color: #fff; font-weight: 500; }
+  .caption .k { color:#8fd3ff; font-weight:500; }
+
+  /* ---- phone frame ---- */
+  .phone {
+    position: relative; width: 340px; height: 720px; border-radius: 54px;
+    background: #000; padding: 12px;
+    box-shadow: 0 40px 90px rgba(0,0,0,.6), inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  .screen {
+    position: relative; width: 100%; height: 100%; border-radius: 44px; overflow: hidden;
+    background: #101216;
+  }
+  .notch { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:112px; height:30px; background:#000; border-radius:20px; z-index:60; }
+  .statusbar { position:absolute; top:0; left:0; right:0; height:52px; display:flex; align-items:center; justify-content:space-between; padding:20px 26px 0; font-size:13px; font-weight:600; z-index:55; }
+
+  /* ---- background that reacts to position/mood ---- */
+  .bg { position:absolute; inset:0; transition: background 900ms var(--ease); }
+
+  .view { position:absolute; inset:0; opacity:0; pointer-events:none; transition: opacity .45s var(--ease), transform .45s var(--ease); }
+  .view.active { opacity:1; pointer-events:auto; }
+
+  /* ================= LIBRARY ================= */
+  #library { transform: scale(1.02); background:
+     linear-gradient(180deg, #b9d8ff 0%, #d6e4ff 26%, #eef1f7 55%, #ffffff 100%); color:#10131a; }
+  #library.active { transform: scale(1); }
+  .lib-scroll { position:absolute; inset:0; overflow:auto; padding:64px 22px 120px; }
+  .lib-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:18px; }
+  .lib-head h2 { font-size:34px; font-weight:250; letter-spacing:.5px; margin:0; }
+  .lib-head .sub { font-size:12px; color:#5c6373; margin-top:2px; }
+  .icon-btn { width:40px; height:40px; border-radius:50%; border:none; background:rgba(16,19,26,.06); display:grid; place-items:center; cursor:pointer; transition:.2s; }
+  .icon-btn:hover { background:rgba(16,19,26,.12); }
+  .icon-btn svg { width:20px; height:20px; stroke:#10131a; stroke-width:1.6; fill:none; }
+
+  .chips { display:flex; gap:8px; overflow:auto; padding:4px 0 14px; scrollbar-width:none; }
+  .chips::-webkit-scrollbar { display:none; }
+  .chip { flex:0 0 auto; padding:8px 15px; border-radius:20px; font-size:13px; font-weight:500; background:rgba(16,19,26,.05); color:#3a4150; cursor:pointer; transition:.2s var(--ease); white-space:nowrap; }
+  .chip.on { background:#10131a; color:#fff; }
+
+  .track { display:flex; align-items:center; gap:14px; padding:12px 10px; border-radius:20px; cursor:pointer; transition:.2s var(--ease); }
+  .track:hover { background:rgba(16,19,26,.04); }
+  .thumb { width:52px; height:52px; border-radius:16px; flex:0 0 auto; display:grid; place-items:center; overflow:hidden; }
+  .thumb svg { width:100%; height:100%; }
+  .t-meta { flex:1; min-width:0; }
+  .t-title { font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .t-sub { font-size:12px; color:#7a8091; margin-top:2px; }
+  .heart { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; cursor:pointer; }
+  .heart svg { width:19px; height:19px; stroke:#c2c7d2; fill:none; stroke-width:1.6; transition:.2s; }
+  .heart.fav svg { fill:#ff5e7a; stroke:#ff5e7a; }
+
+  .import-card { margin:6px 0 18px; border:1.5px dashed rgba(16,19,26,.18); border-radius:22px; padding:18px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:.2s; }
+  .import-card:hover { background:rgba(16,19,26,.03); border-color:rgba(16,19,26,.32); }
+  .import-card .ic { width:44px; height:44px; border-radius:14px; background:#10131a; display:grid; place-items:center; }
+  .import-card .ic svg { width:22px; height:22px; stroke:#fff; stroke-width:1.7; fill:none; }
+  .import-card .txt b { font-size:14px; font-weight:600; }
+  .import-card .txt div { font-size:12px; color:#7a8091; margin-top:2px; }
+
+  /* ================= PLAYER ================= */
+  .p-top { position:absolute; top:60px; left:24px; right:24px; z-index:20; display:flex; justify-content:space-between; align-items:center; }
+  .p-back svg, .p-more svg { width:24px; height:24px; stroke:#fff; stroke-width:1.7; fill:none; }
+  .p-back, .p-more { cursor:pointer; opacity:.9; }
+
+  .p-info { position:absolute; top:120px; left:26px; right:26px; z-index:15; }
+  .p-time { font-size:78px; font-weight:200; letter-spacing:-1px; line-height:1; }
+  .p-total { font-size:15px; opacity:.7; font-weight:300; margin-top:6px; }
+  .p-title { margin-top:20px; font-size:20px; font-weight:500; }
+  .p-artist { font-size:13px; opacity:.7; margin-top:3px; display:flex; align-items:center; gap:6px; }
+  .p-tag { font-size:11px; padding:3px 9px; border-radius:20px; background:var(--glass); backdrop-filter:blur(8px); }
+
+  /* waveform scrubber */
+  .wave-wrap { position:absolute; left:0; right:0; bottom:186px; z-index:15; padding:0 20px; touch-action:none; }
+  .wave-labels { display:flex; justify-content:space-between; font-size:11px; opacity:.6; padding:0 4px 8px; }
+  .wave {
+    position:relative; height:120px; display:flex; align-items:center; gap:2px;
+    cursor:grab; user-select:none;
+  }
+  .wave.drag { cursor:grabbing; }
+  .bar { flex:1; border-radius:3px; background:rgba(255,255,255,.28); transition: background .1s linear, transform .12s var(--ease); }
+  .bar.played { background:#fff; }
+  .bar.head { transform: scaleY(1.12); }
+
+  .playhead-pill {
+    position:absolute; top:-30px; transform:translateX(-50%);
+    background:#fff; color:#111; font-size:12px; font-weight:600;
+    padding:4px 10px; border-radius:20px; white-space:nowrap;
+    box-shadow:0 6px 18px rgba(0,0,0,.28); pointer-events:none;
+    transition: left .05s linear;
+  }
+  .playhead-pill::after { content:""; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%) rotate(45deg); width:8px; height:8px; background:#fff; }
+
+  /* markers */
+  .marker { position:absolute; top:-4px; width:2px; height:128px; background:#ffd15c; pointer-events:none; }
+  .marker .flag { position:absolute; top:-2px; left:3px; font-size:10px; font-weight:600; color:#111; background:#ffd15c; padding:2px 6px; border-radius:8px; white-space:nowrap; }
+
+  /* transport controls */
+  .transport { position:absolute; left:0; right:0; bottom:64px; z-index:15; display:flex; align-items:center; justify-content:center; gap:30px; }
+  .tp-btn { cursor:pointer; opacity:.92; }
+  .tp-btn svg { stroke:#fff; fill:#fff; }
+  .play-btn { width:74px; height:74px; border-radius:50%; background:rgba(255,255,255,.16); backdrop-filter:blur(12px); border:1px solid var(--hair); display:grid; place-items:center; cursor:pointer; transition:.15s var(--ease); }
+  .play-btn:active { transform:scale(.94); }
+  .play-btn svg { width:30px; height:30px; fill:#fff; }
+
+  .p-actions { position:absolute; left:20px; right:20px; bottom:150px; z-index:15; display:flex; justify-content:space-between; }
+  .act { display:flex; align-items:center; gap:7px; font-size:12px; padding:9px 15px; border-radius:22px; background:var(--glass); backdrop-filter:blur(10px); border:1px solid var(--hair); cursor:pointer; transition:.18s var(--ease); }
+  .act:hover { background:var(--glass-strong); }
+  .act svg { width:17px; height:17px; stroke:#fff; fill:none; stroke-width:1.7; }
+  .act.on svg { fill:#ff5e7a; stroke:#ff5e7a; }
+  .act.mark.on svg { fill:#ffd15c; stroke:#ffd15c; }
+
+  .hint { position:fixed; bottom:22px; left:0; right:0; text-align:center; font-size:12px; color:#6b7180; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="caption">
+      <h1>Sola Player</h1>
+      <p>从天气 App 的 <b>时间轴滑动</b> 提炼出的语言：一条可拖动的横轴，拖动时<b>整屏环境随之呼吸</b>。</p>
+      <p>在音频里，这条横轴变成 <span class="k">波形进度条</span>——<b>每根竖条的高度 = 那一刻的响度</b>；拖动即定位，可在任意时刻<b>打点标记</b>。</p>
+      <p>点手机里的按钮试试：切换分组、进入播放页、拖动波形、打点。</p>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span>􀙇 􀋨 􀛨</span></div>
+
+        <!-- ===================== LIBRARY ===================== -->
+        <section class="view active" id="library">
+          <div class="lib-scroll">
+            <div class="lib-head">
+              <div>
+                <h2>音库</h2>
+                <div class="sub">128 段音频 · 4 个分组</div>
+              </div>
+              <button class="icon-btn" title="导入">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+
+            <div class="chips" id="chips">
+              <div class="chip on">默认列表</div>
+              <div class="chip">采访</div>
+              <div class="chip">灵感速记</div>
+              <div class="chip">环境声</div>
+              <div class="chip">音乐 Demo</div>
+            </div>
+
+            <div class="import-card" onclick="go('player')">
+              <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 15V3m0 0L8 7m4-4 4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+              <div class="txt"><b>导入音频</b><div>文件 · 录音 · 链接 · AirDrop</div></div>
+            </div>
+
+            <div id="track-list"></div>
+          </div>
+        </section>
+
+        <!-- ===================== PLAYER ===================== -->
+        <section class="view" id="player">
+          <div class="bg" id="playerBg"></div>
+
+          <div class="p-top">
+            <div class="p-back" onclick="go('library')"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
+            <div class="p-more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="#fff" stroke="none"/></svg></div>
+          </div>
+
+          <div class="p-info">
+            <div class="p-time" id="curTime">0:00</div>
+            <div class="p-total" id="totTime">/ 3:48 <span id="dirArrow" style="opacity:0;transition:.2s;font-weight:500;margin-left:8px;">􀯻 快进</span></div>
+            <div class="p-title">城市清晨 · 环境采集</div>
+            <div class="p-artist">Field Recording <span class="p-tag" id="moodTag">明亮</span></div>
+          </div>
+
+          <div class="wave-wrap">
+            <div class="wave-labels"><span>0:00</span><span id="wl-mid">1:54</span><span>3:48</span></div>
+            <div class="wave" id="wave">
+              <div class="playhead-pill" id="pill" style="left:0">0:00</div>
+            </div>
+          </div>
+
+          <div class="p-actions" style="justify-content:center">
+            <div class="act mark" id="markBtn" onclick="addMarker()">
+              <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+              标记此刻
+            </div>
+          </div>
+
+          <div class="transport">
+            <div class="tp-btn" onclick="seekBy(-15)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M11 5L4 12l7 7"/><path d="M20 5l-7 7 7 7"/></svg></div>
+            <div class="play-btn" id="playBtn" onclick="togglePlay()">
+              <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="tp-btn" onclick="seekBy(15)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M13 5l7 7-7 7"/><path d="M4 5l7 7-7 7"/></svg></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+  <div class="hint">交互原型 · 波形与音频为示意数据</div>
+
+<script>
+  // ---------- mock data ----------
+  const DUR = 228; // seconds (3:48)
+  const N = 68;    // number of waveform bars
+  // amplitude envelope: bar height = loudness at that moment
+  const amps = Array.from({length:N}, (_,i) => {
+    const env = Math.sin(i/N*Math.PI); // overall arc
+    const detail = 0.35 + 0.65*Math.abs(Math.sin(i*0.9)*Math.cos(i*0.37));
+    return Math.max(0.12, Math.min(1, env*detail + (Math.random()*0.12-0.02)));
+  });
+
+  // moods drive the reactive background as playback position changes
+  const moods = [
+    { p:0.0,  tag:"明亮",  css:"linear-gradient(180deg,#5aa9ff 0%,#8fc4ff 45%,#dbecff 100%)" },
+    { p:0.4,  tag:"温暖",  css:"linear-gradient(180deg,#ffb27a 0%,#ff8f6b 45%,#ffd9c0 100%)" },
+    { p:0.68, tag:"黄昏",  css:"linear-gradient(180deg,#ff7e6b 0%,#c25a8f 55%,#5b4b8a 100%)" },
+    { p:1.0,  tag:"夜色",  css:"linear-gradient(180deg,#1b2440 0%,#101526 55%,#05060b 100%)" },
+  ];
+
+  const tracks = [
+    { t:"城市清晨 · 环境采集", s:"Field Recording · 3:48", g:"环境声", fav:true },
+    { t:"产品复盘会 · 片段", s:"采访 · 42:10", g:"采访", fav:false },
+    { t:"深夜灵感 · 旋律哼唱", s:"灵感速记 · 1:12", g:"灵感速记", fav:true },
+    { t:"雨落屋檐", s:"环境声 · 8:05", g:"环境声", fav:false },
+    { t:"副歌 Demo v3", s:"音乐 Demo · 2:20", g:"音乐 Demo", fav:false },
+    { t:"用户访谈 · 张女士", s:"采访 · 27:44", g:"采访", fav:true },
+  ];
+
+  // ---------- helpers ----------
+  const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  const wave = document.getElementById('wave');
+  const pill = document.getElementById('pill');
+  const bg = document.getElementById('playerBg');
+  let progress = 0;      // 0..1
+  let playing = false;
+  let markers = [0.22];  // stored as fractions
+  let bars = [];
+
+  function buildBars(){
+    bars = [];
+    amps.forEach((a,i)=>{
+      const b = document.createElement('div');
+      b.className='bar';
+      b.style.height = (14 + a*104) + 'px';
+      wave.appendChild(b);
+      bars.push(b);
+    });
+    renderMarkers();
+  }
+
+  function lerpMood(p){
+    for(let i=0;i<moods.length-1;i++){
+      if(p<=moods[i+1].p){
+        // pick the nearer stop for the tag, blend background via the upper stop
+        const near = (p-moods[i].p) < (moods[i+1].p-p) ? moods[i] : moods[i+1];
+        return { css: p < (moods[i].p+moods[i+1].p)/2 ? moods[i].css : moods[i+1].css, tag: near.tag };
+      }
+    }
+    return moods[moods.length-1];
+  }
+
+  function render(){
+    const headIndex = Math.round(progress*(N-1));
+    bars.forEach((b,i)=>{
+      b.classList.toggle('played', i<=headIndex);
+      b.classList.toggle('head', i===headIndex);
+    });
+    // pill position within wave
+    const w = wave.clientWidth;
+    pill.style.left = (progress*w) + 'px';
+    pill.textContent = fmt(progress*DUR);
+    document.getElementById('curTime').textContent = fmt(progress*DUR);
+    const m = lerpMood(progress);
+    bg.style.background = m.css;
+    document.getElementById('moodTag').textContent = m.tag;
+  }
+
+  function renderMarkers(){
+    document.querySelectorAll('.marker').forEach(e=>e.remove());
+    const w = wave.clientWidth || 300;
+    markers.forEach(f=>{
+      const m = document.createElement('div');
+      m.className='marker';
+      m.style.left=(f*w)+'px';
+      m.innerHTML = `<div class="flag">${fmt(f*DUR)}</div>`;
+      wave.appendChild(m);
+    });
+  }
+
+  // ---------- interaction: drag to scrub (haptic ticks + direction) ----------
+  let lastHeadIndex = -1;
+  function hapticTick(dir){
+    // real device: navigator.vibrate; on iOS SwiftUI this maps to UIImpactFeedbackGenerator(.light)
+    if(navigator.vibrate) navigator.vibrate(6);
+    const head = bars[Math.round(progress*(N-1))];
+    if(head){ head.animate([{transform:'scaleY(1.28)'},{transform:'scaleY(1.12)'}],{duration:120,easing:'ease-out'}); }
+    const arrow = document.getElementById('dirArrow');
+    arrow.textContent = dir>0 ? '􀯻 快进' : '􀯶 倒退';
+    arrow.style.opacity = 1;
+    clearTimeout(arrow._t); arrow._t = setTimeout(()=>arrow.style.opacity=0, 500);
+  }
+  function setFromX(clientX){
+    const r = wave.getBoundingClientRect();
+    progress = Math.max(0, Math.min(1, (clientX-r.left)/r.width));
+    render();
+    const hi = Math.round(progress*(N-1));
+    if(hi!==lastHeadIndex && lastHeadIndex!==-1) hapticTick(hi-lastHeadIndex);
+    lastHeadIndex = hi;
+  }
+  let dragging=false;
+  wave.addEventListener('pointerdown', e=>{ dragging=true; wave.classList.add('drag'); wave.setPointerCapture(e.pointerId); lastHeadIndex=Math.round(progress*(N-1)); setFromX(e.clientX); });
+  wave.addEventListener('pointermove', e=>{ if(dragging) setFromX(e.clientX); });
+  wave.addEventListener('pointerup',   ()=>{ dragging=false; wave.classList.remove('drag'); lastHeadIndex=-1; });
+  window.addEventListener('resize', ()=>{ render(); renderMarkers(); });
+
+  // ---------- transport ----------
+  function togglePlay(){
+    playing=!playing;
+    document.getElementById('playIcon').innerHTML = playing
+      ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>'
+      : '<path d="M8 5v14l11-7z"/>';
+  }
+  function seekBy(s){ progress=Math.max(0,Math.min(1, progress + s/DUR)); render(); }
+  function addMarker(){
+    markers.push(progress);
+    const btn=document.getElementById('markBtn');
+    btn.classList.add('on'); setTimeout(()=>btn.classList.remove('on'),450);
+    renderMarkers();
+  }
+  setInterval(()=>{ if(playing){ progress+=1/DUR/8; if(progress>=1){progress=1;playing=false;togglePlay();} render(); } }, 125/8*10);
+
+  // ---------- library list ----------
+  function miniWave(){
+    let s='<svg viewBox="0 0 52 52" preserveAspectRatio="none">';
+    for(let i=0;i<14;i++){ const h=8+Math.random()*34; s+=`<rect x="${2+i*3.6}" y="${26-h/2}" width="2" height="${h}" rx="1" fill="rgba(255,255,255,.9)"/>`; }
+    return s+'</svg>';
+  }
+  const grads=['#6aa8ff','#ff9a6b','#ff6b9d','#7ad0c0','#b08bff','#ffcf5c'];
+  function renderTracks(){
+    const list=document.getElementById('track-list');
+    list.innerHTML='';
+    tracks.forEach((t,i)=>{
+      const row=document.createElement('div'); row.className='track'; row.onclick=()=>go('player');
+      row.innerHTML=`
+        <div class="thumb" style="background:linear-gradient(135deg,${grads[i%grads.length]},${grads[(i+2)%grads.length]})">${miniWave()}</div>
+        <div class="t-meta"><div class="t-title">${t.t}</div><div class="t-sub">${t.s}</div></div>
+        <div class="ic more"><svg viewBox="0 0 24 24" width="20" height="20"><circle cx="5" cy="12" r="1.4" fill="#9aa0ad"/><circle cx="12" cy="12" r="1.4" fill="#9aa0ad"/><circle cx="19" cy="12" r="1.4" fill="#9aa0ad"/></svg></div>`;
+      list.appendChild(row);
+    });
+  }
+
+  document.getElementById('chips').addEventListener('click', e=>{
+    if(e.target.classList.contains('chip')){
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+      e.target.classList.add('on');
+    }
+  });
+
+  // ---------- view switch ----------
+  function go(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(id==='player'){ setTimeout(()=>{ render(); renderMarkers(); },30); }
+  }
+
+  // init
+  buildBars(); render(); renderTracks();
+  document.getElementById('totTime').textContent='/ '+fmt(DUR);
+  document.getElementById('wl-mid').textContent=fmt(DUR/2);
+  if(location.hash==='#player'){ progress=0.34; markers=[0.14,0.34,0.72]; go('player'); }
+</script>
+</body>
+</html>

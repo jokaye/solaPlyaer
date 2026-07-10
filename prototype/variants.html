@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sola Player · Player UI Variants</title>
+<style>
+  :root { --ease: cubic-bezier(0.22,1,0.36,1); --glass:rgba(255,255,255,.16); --glassS:rgba(255,255,255,.26); --hair:rgba(255,255,255,.2); }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,"PingFang SC",sans-serif;background:#0b0c10;color:#fff;display:grid;place-items:center;-webkit-font-smoothing:antialiased;}
+  .phone{position:relative;width:340px;height:720px;border-radius:54px;background:#000;padding:12px;box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 2px rgba(255,255,255,.06);}
+  .screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:#101216;}
+  .notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#000;border-radius:20px;z-index:60;}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:20px 26px 0;font-size:13px;font-weight:600;z-index:55;}
+  .bg{position:absolute;inset:0;transition:background .9s var(--ease);}
+  .p-top{position:absolute;top:60px;left:24px;right:24px;z-index:20;display:flex;justify-content:space-between;align-items:center;}
+  .p-top svg{width:24px;height:24px;stroke:#fff;stroke-width:1.7;fill:none;}
+  .p-top .ic{cursor:pointer;opacity:.9;}
+  .vbadge{position:absolute;top:60px;left:0;right:0;text-align:center;font-size:12px;font-weight:600;letter-spacing:1px;opacity:.85;z-index:21;}
+
+  .p-time{font-weight:200;letter-spacing:-1px;line-height:1;}
+  .p-total{opacity:.7;font-weight:300;}
+  .p-title{font-weight:500;}
+  .p-artist{opacity:.7;display:flex;align-items:center;gap:6px;}
+  .p-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--glass);backdrop-filter:blur(8px);}
+
+  /* waveform */
+  .wave-labels{display:flex;justify-content:space-between;font-size:11px;opacity:.6;padding:0 4px 8px;}
+  .wave{position:relative;display:flex;align-items:center;gap:2px;cursor:grab;user-select:none;touch-action:none;}
+  .bar{flex:1;border-radius:3px;background:rgba(255,255,255,.28);}
+  .bar.played{background:#fff;}
+  .pill{position:absolute;top:-30px;transform:translateX(-50%);background:#fff;color:#111;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.28);pointer-events:none;}
+  .pill::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:#fff;}
+  .marker{position:absolute;top:-2px;width:2px;background:#ffd15c;pointer-events:none;}
+  .marker .flag{position:absolute;top:-2px;left:3px;font-size:10px;font-weight:600;color:#111;background:#ffd15c;padding:2px 5px;border-radius:7px;white-space:nowrap;}
+  .knob{position:absolute;top:50%;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.35);transform:translate(-50%,-50%);pointer-events:none;border:3px solid rgba(255,255,255,.6);}
+
+  /* transport pieces */
+  .tp{cursor:pointer;opacity:.92;display:grid;place-items:center;}
+  .tp svg{stroke:#fff;fill:#fff;}
+  .play{border-radius:50%;background:var(--glass);backdrop-filter:blur(12px);border:1px solid var(--hair);display:grid;place-items:center;cursor:pointer;}
+  .play svg{fill:#fff;}
+  .act{display:flex;align-items:center;gap:6px;font-size:12px;padding:8px 13px;border-radius:22px;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--hair);cursor:pointer;}
+  .act svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.7;}
+
+  .zone{position:absolute;left:0;right:0;z-index:15;}
+  .card{background:rgba(255,255,255,.12);backdrop-filter:blur(24px);border:1px solid var(--hair);border-radius:30px;}
+  .dock{display:flex;align-items:center;justify-content:space-around;gap:6px;background:rgba(255,255,255,.14);backdrop-filter:blur(20px);border:1px solid var(--hair);border-radius:30px;padding:12px 16px;}
+  .foot{position:fixed;bottom:16px;left:0;right:0;text-align:center;font-size:12px;color:#7b8290;}
+</style>
+</head>
+<body>
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="statusbar"><span>9:41</span><span>􀙇 􀋨 􀛨</span></div>
+    <div class="bg" id="bg"></div>
+    <div class="p-top"><div class="ic"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div><div class="ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="#fff" stroke="none"/></svg></div></div>
+    <div class="vbadge" id="vbadge"></div>
+    <div id="root"></div>
+  </div></div>
+  <div class="foot" id="foot"></div>
+
+<script>
+  const DUR=228, N=64;
+  const amps=Array.from({length:N},(_,i)=>{const env=Math.sin(i/N*Math.PI);const d=.35+.65*Math.abs(Math.sin(i*.9)*Math.cos(i*.37));return Math.max(.12,Math.min(1,env*d+(Math.random()*.1-.02)));});
+  const moods=[{p:0,css:"linear-gradient(180deg,#5aa9ff,#8fc4ff 45%,#dbecff)",tag:"明亮"},{p:.4,css:"linear-gradient(180deg,#ffb27a,#ff8f6b 45%,#ffd9c0)",tag:"温暖"},{p:.68,css:"linear-gradient(180deg,#ff7e6b,#c25a8f 55%,#5b4b8a)",tag:"黄昏"},{p:1,css:"linear-gradient(180deg,#1b2440,#101526 55%,#05060b)",tag:"夜色"}];
+  const fmt=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  function mood(p){for(let i=0;i<moods.length-1;i++){if(p<=moods[i+1].p){const near=(p-moods[i].p)<(moods[i+1].p-p)?moods[i]:moods[i+1];return{css:p<(moods[i].p+moods[i+1].p)/2?moods[i].css:moods[i+1].css,tag:near.tag};}}return moods[3];}
+
+  const params=new URLSearchParams(location.search);
+  const V=parseInt(params.get('v')||'1');
+  let progress=[0,.30,.12,.55,.72,.90,.42][V] ?? .30;
+  let playing=false;
+  const markers=[.14,.42,.72];
+
+  const NAMES={1:"方案 1 · 精修经典",2:"方案 2 · 底部玻璃坞",3:"方案 3 · 波形主角",4:"方案 4 · 磨砂卡片",5:"方案 5 · 极简手柄",6:"方案 6 · 圆柄粗轨"};
+  const DESC={1:"控件缩小居中，波形加宽加高",2:"播放键并入底部胶囊坞，波形独占中部",3:"超大波形居中当主角，控件收成时间码下小图标",4:"波形+小控件收进底部磨砂卡片",5:"无按钮底纹极简，波形带圆形拖拽手柄",6:"加厚触控轨+显著圆柄，最易拖动"};
+
+  // ---- shared markup pieces ----
+  const iPrev='<svg viewBox="0 0 24 24" fill="#fff"><path d="M7 6v12M20 6l-9 6 9 6z"/></svg>';
+  const iNext='<svg viewBox="0 0 24 24" fill="#fff"><path d="M17 6v12M4 6l9 6-9 6z"/></svg>';
+  const iPlay='<svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>';
+  const iHeart='<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9C1 8 2.5 4 6 4c2 0 3.2 1.3 4 2.5C10.8 5.3 12 4 14 4c3.5 0 5 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg>';
+  const iMark='<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+
+  function timeBlock(size){return `<div class="p-time" style="font-size:${size}px">${fmt(progress*DUR)}</div><div class="p-total" style="font-size:15px;margin-top:6px">/ ${fmt(DUR)}</div>`;}
+  function titleBlock(){return `<div class="p-title" style="font-size:19px;margin-top:16px">城市清晨 · 环境采集</div><div class="p-artist" style="font-size:13px;margin-top:3px">Field Recording <span class="p-tag" id="tag">温暖</span></div>`;}
+  function waveEl(h,handle){return `<div class="wave-labels"><span>0:00</span><span>${fmt(DUR/2)}</span><span>${fmt(DUR)}</span></div><div class="wave" id="wave" style="height:${h}px"><div class="pill" id="pill">0:00</div>${handle?'<div class="knob" id="knob"></div>':''}</div>`;}
+  function tpRow(playSize,btnSize,gap){return `<div style="display:flex;align-items:center;justify-content:center;gap:${gap}px"><div class="tp" style="width:${btnSize}px;height:${btnSize}px">${iPrev}</div><div class="play" id="play" style="width:${playSize}px;height:${playSize}px"><span style="width:${playSize*.4}px;height:${playSize*.4}px;display:grid">${iPlay}</span></div><div class="tp" style="width:${btnSize}px;height:${btnSize}px">${iNext}</div></div>`;}
+  function actionsRow(){return `<div style="display:flex;justify-content:space-between"><div class="act">${iHeart}收藏</div><div class="act" style="--x:1">${iMark}标记此刻</div></div>`;}
+
+  // ---- per-variant full layout ----
+  function layout(v){
+    switch(v){
+      case 1: return `
+        <div style="position:absolute;top:118px;left:26px;right:26px">${timeBlock(74)}${titleBlock()}</div>
+        <div class="zone" style="bottom:200px;padding:0 20px">${waveEl(150,false)}</div>
+        <div class="zone" style="bottom:150px;padding:0 22px">${actionsRow()}</div>
+        <div class="zone" style="bottom:70px">${tpRow(52,22,34)}</div>`;
+      case 2: return `
+        <div style="position:absolute;top:120px;left:26px;right:26px">${timeBlock(70)}${titleBlock()}</div>
+        <div class="zone" style="bottom:150px;padding:0 20px">${waveEl(170,false)}</div>
+        <div class="zone" style="bottom:56px;padding:0 20px"><div class="dock">
+          <div class="tp" style="width:22px;height:22px">${iHeart.replace('stroke:#fff','')}</div>
+          <div class="tp" style="width:24px;height:24px">${iPrev}</div>
+          <div class="play" id="play" style="width:46px;height:46px"><span style="width:18px;height:18px;display:grid">${iPlay}</span></div>
+          <div class="tp" style="width:24px;height:24px">${iNext}</div>
+          <div class="tp" style="width:22px;height:22px"><svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.6"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+        </div></div>`;
+      case 3: return `
+        <div style="position:absolute;top:112px;left:26px;right:26px;display:flex;justify-content:space-between;align-items:flex-end">
+          <div>${timeBlock(64)}</div>
+          <div style="display:flex;align-items:center;gap:20px;padding-bottom:6px">
+            <div class="tp" style="width:20px;height:20px">${iPrev}</div>
+            <div class="tp" id="play" style="width:30px;height:30px">${iPlay}</div>
+            <div class="tp" style="width:20px;height:20px">${iNext}</div>
+          </div>
+        </div>
+        <div class="zone" style="top:50%;transform:translateY(-50%);padding:0 18px">${waveEl(200,false)}</div>
+        <div class="zone" style="bottom:56px;padding:0 22px">${actionsRow()}</div>`;
+      case 4: return `
+        <div style="position:absolute;top:120px;left:26px;right:26px">${timeBlock(72)}${titleBlock()}</div>
+        <div class="zone card" style="bottom:44px;left:16px;right:16px;padding:20px 18px 18px">
+          ${waveEl(120,false)}
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px">
+            <div class="tp" style="width:22px;height:22px">${iHeart.replace('','')}<svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.6"><path d="M12 21s-7-4.5-9.5-9C1 8 2.5 4 6 4c2 0 3.2 1.3 4 2.5C10.8 5.3 12 4 14 4c3.5 0 5 4 3.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg></div>
+            <div style="display:flex;align-items:center;gap:26px">
+              <div class="tp" style="width:22px;height:22px">${iPrev}</div>
+              <div class="play" id="play" style="width:48px;height:48px"><span style="width:19px;height:19px;display:grid">${iPlay}</span></div>
+              <div class="tp" style="width:22px;height:22px">${iNext}</div>
+            </div>
+            <div class="tp" style="width:22px;height:22px"><svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.6"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div>
+          </div>
+        </div>`;
+      case 5: return `
+        <div style="position:absolute;top:118px;left:26px;right:26px">${timeBlock(76)}${titleBlock()}</div>
+        <div class="zone" style="bottom:170px;padding:0 20px">${waveEl(160,true)}</div>
+        <div class="zone" style="bottom:150px;padding:0 22px">${actionsRow()}</div>
+        <div class="zone" style="bottom:74px">${tpRow(44,20,40)}</div>`;
+      case 6: return `
+        <div style="position:absolute;top:120px;left:26px;right:26px">${timeBlock(70)}${titleBlock()}</div>
+        <div class="zone" style="bottom:150px;padding:0 16px">
+          <div class="wave-labels"><span>0:00</span><span>${fmt(DUR/2)}</span><span>${fmt(DUR)}</span></div>
+          <div style="background:rgba(255,255,255,.1);border:1px solid var(--hair);border-radius:24px;padding:16px 14px">${'<div class="wave" id="wave" style="height:150px"><div class="pill" id="pill">0:00</div><div class="knob" id="knob"></div></div>'}</div>
+        </div>
+        <div class="zone" style="bottom:70px;padding:0 20px"><div class="dock" style="padding:10px 14px">
+          <div class="tp" style="width:22px;height:22px">${iPrev}</div>
+          <div class="tp" id="play" style="width:30px;height:30px">${iPlay}</div>
+          <div class="tp" style="width:22px;height:22px">${iNext}</div>
+        </div></div>`;
+    }
+  }
+
+  document.getElementById('root').innerHTML=layout(V);
+  document.getElementById('vbadge').textContent=NAMES[V];
+  document.getElementById('foot').textContent=NAMES[V]+' — '+DESC[V];
+
+  // ---- wire waveform ----
+  const wave=document.getElementById('wave');
+  const bars=[];
+  amps.forEach(a=>{const b=document.createElement('div');b.className='bar';const h=wave.style.height?parseInt(wave.style.height):120;b.style.height=(h*.12+a*h*.82)+'px';wave.appendChild(b);bars.push(b);});
+  const pill=document.getElementById('pill');
+  const knob=document.getElementById('knob');
+  const bg=document.getElementById('bg');
+  function renderMarkers(){document.querySelectorAll('.marker').forEach(e=>e.remove());const w=wave.clientWidth,h=wave.clientHeight;markers.forEach(f=>{const m=document.createElement('div');m.className='marker';m.style.left=(f*w)+'px';m.style.height=(h+6)+'px';m.innerHTML=`<div class="flag">${fmt(f*DUR)}</div>`;wave.appendChild(m);});}
+  function render(){const hi=Math.round(progress*(N-1));bars.forEach((b,i)=>b.classList.toggle('played',i<=hi));const w=wave.clientWidth;pill.style.left=(progress*w)+'px';pill.textContent=fmt(progress*DUR);if(knob)knob.style.left=(progress*w)+'px';const m=mood(progress);bg.style.background=m.css;const tag=document.getElementById('tag');if(tag)tag.textContent=m.tag;const t=document.querySelector('.p-time');if(t)t.textContent=fmt(progress*DUR);}
+  let drag=false,last=-1;
+  function setX(x){const r=wave.getBoundingClientRect();progress=Math.max(0,Math.min(1,(x-r.left)/r.width));render();const hi=Math.round(progress*(N-1));if(hi!==last&&last!==-1&&navigator.vibrate)navigator.vibrate(6);last=hi;}
+  wave.addEventListener('pointerdown',e=>{drag=true;wave.classList.add('drag');wave.setPointerCapture(e.pointerId);last=Math.round(progress*(N-1));setX(e.clientX);});
+  wave.addEventListener('pointermove',e=>{if(drag)setX(e.clientX);});
+  wave.addEventListener('pointerup',()=>{drag=false;last=-1;});
+  window.addEventListener('resize',()=>{render();renderMarkers();});
+  setTimeout(()=>{render();renderMarkers();},20);
+</script>
+</body>
+</html>

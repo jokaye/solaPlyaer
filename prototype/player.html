@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sola Player · 播放页（精修2 定稿）</title>
+<style>
+  :root{--ease:cubic-bezier(.22,1,.36,1);--ink:#10131a;--sub:#7a8091;--line:rgba(16,19,26,.07);--accent:#17b3c6;--accent2:#2ec98a;--glass:rgba(255,255,255,.18);--hair:rgba(255,255,255,.28);}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,"PingFang SC",sans-serif;background:#0b0c10;color:#fff;display:grid;place-items:center;-webkit-font-smoothing:antialiased;}
+  .phone{position:relative;width:340px;height:720px;border-radius:54px;background:#000;padding:12px;box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 2px rgba(255,255,255,.06);}
+  .screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;}
+  .notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#000;border-radius:20px;z-index:60;}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:20px 26px 0;font-size:13px;font-weight:600;z-index:55;}
+  .bg{position:absolute;inset:0;background:linear-gradient(180deg,#17b3c6 0%,#7fe0e6 52%,#e0f7f7 100%);}
+
+  .p-top{position:absolute;top:58px;left:24px;right:24px;z-index:20;display:flex;justify-content:space-between;align-items:center;}
+  .p-top svg{width:24px;height:24px;stroke:#fff;stroke-width:1.7;fill:none;}
+  .p-top .ic{cursor:pointer;opacity:.92;}
+  .p-src{font-size:13px;font-weight:600;opacity:.9;display:flex;align-items:center;gap:5px;}
+  .p-src .d{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.8;}
+
+  .p-info{position:absolute;top:118px;left:26px;right:26px;z-index:15;}
+  .p-time{font-size:72px;font-weight:200;letter-spacing:-1px;line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.06);}
+  .p-total{font-size:15px;opacity:.75;font-weight:300;margin-top:6px;}
+  .p-title{margin-top:16px;font-size:19px;font-weight:500;}
+  .p-artist{font-size:13px;opacity:.75;margin-top:3px;display:flex;align-items:center;gap:6px;}
+  .p-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--glass);backdrop-filter:blur(8px);}
+
+  .wave-wrap{position:absolute;left:0;right:0;bottom:150px;z-index:15;padding:0 20px;touch-action:none;}
+  .wave-labels{display:flex;justify-content:space-between;font-size:11px;opacity:.65;padding:0 4px 8px;}
+  .wave{position:relative;height:84px;display:flex;align-items:center;gap:2px;cursor:grab;user-select:none;}
+  .bar{flex:1;border-radius:3px;background:rgba(255,255,255,.32);}
+  .bar.played{background:#fff;}
+  .pill{position:absolute;top:-30px;transform:translateX(-50%);background:#fff;color:#111;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.28);pointer-events:none;}
+  .pill::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:#fff;}
+  .marker{position:absolute;top:-2px;width:2px;background:#ffd15c;pointer-events:none;}
+  .marker .flag{position:absolute;top:-2px;left:3px;font-size:10px;font-weight:600;color:#111;background:#ffd15c;padding:2px 5px;border-radius:7px;white-space:nowrap;}
+
+  .p-actions{position:absolute;left:20px;right:20px;bottom:100px;z-index:15;display:flex;justify-content:space-between;}
+  .act{display:flex;align-items:center;gap:7px;font-size:12px;padding:9px 15px;border-radius:22px;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--hair);cursor:pointer;transition:.18s var(--ease);}
+  .act:active{transform:scale(.96);}
+  .act svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.7;}
+  .act .cnt{background:#fff;color:var(--accent);font-weight:700;border-radius:10px;padding:0 6px;font-size:11px;margin-left:1px;}
+  .act.mark.on svg{fill:#ffd15c;stroke:#ffd15c;}
+
+  .transport{position:absolute;left:0;right:0;bottom:50px;z-index:15;display:flex;align-items:center;justify-content:center;gap:40px;}
+  .tp{cursor:pointer;opacity:.95;display:grid;place-items:center;}
+  .tp svg{stroke:#fff;fill:#fff;}
+
+  /* group sheet */
+  .scrim{position:absolute;inset:0;background:rgba(16,19,26,.32);opacity:0;pointer-events:none;transition:.3s;z-index:70;}
+  .scrim.on{opacity:1;pointer-events:auto;}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;color:var(--ink);border-radius:26px 26px 0 0;padding:10px 20px 26px;transform:translateY(110%);transition:transform .38s var(--ease);z-index:71;box-shadow:0 -10px 40px rgba(0,0,0,.25);}
+  .sheet.on{transform:translateY(0);}
+  .grab{width:38px;height:5px;border-radius:3px;background:#e2e5ea;margin:6px auto 14px;}
+  .sheet h3{margin:0 0 2px;font-size:17px;font-weight:600;}
+  .sheet .sh-sub{font-size:12px;color:var(--sub);margin-bottom:8px;}
+  .grp-opt{display:flex;align-items:center;gap:12px;padding:12px 6px;border-top:1px solid var(--line);cursor:pointer;}
+  .grp-opt .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;}
+  .grp-opt .gname{flex:1;font-size:15px;font-weight:500;}
+  .grp-opt .gsub{font-size:11px;color:var(--sub);}
+  .check{width:24px;height:24px;border-radius:50%;border:1.6px solid #d3d7de;display:grid;place-items:center;transition:.2s;}
+  .check.on{background:var(--accent2);border-color:var(--accent2);}
+  .check svg{width:14px;height:14px;stroke:#fff;stroke-width:2.4;fill:none;opacity:0;transition:.15s;}
+  .check.on svg{opacity:1;}
+  .grp-new{display:flex;align-items:center;gap:10px;padding:14px 6px 4px;color:var(--accent);font-weight:600;font-size:14px;cursor:pointer;border-top:1px solid var(--line);}
+  .grp-new svg{width:20px;height:20px;stroke:var(--accent);stroke-width:2;fill:none;}
+  .newrow{display:flex;gap:8px;padding-top:10px;}
+  .newrow input{flex:1;border:1px solid #dfe3ea;border-radius:14px;padding:11px 14px;font-size:14px;outline:none;}
+  .newrow input:focus{border-color:var(--accent);}
+  .newrow button{border:none;background:var(--ink);color:#fff;border-radius:14px;padding:0 18px;font-weight:600;cursor:pointer;}
+  .foot{position:fixed;bottom:16px;left:0;right:0;text-align:center;font-size:12px;color:#7b8290;}
+</style>
+</head>
+<body>
+  <div class="phone"><div class="screen">
+    <div class="notch"></div>
+    <div class="statusbar"><span>9:41</span><span>􀙇 􀋨 􀛨</span></div>
+    <div class="bg"></div>
+
+    <div class="p-top">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></div>
+      <div class="p-src"><span class="d"></span><span id="src">环境声</span></div>
+      <div class="ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/><circle cx="19" cy="12" r="1.3" fill="#fff" stroke="none"/></svg></div>
+    </div>
+
+    <div class="p-info">
+      <div class="p-time" id="curTime">0:00</div>
+      <div class="p-total" id="totTime">/ 3:48</div>
+      <div class="p-title">城市清晨 · 环境采集</div>
+      <div class="p-artist">Field Recording <span class="p-tag">湖水</span></div>
+    </div>
+
+    <div class="wave-wrap">
+      <div class="wave-labels"><span>0:00</span><span>1:54</span><span>3:48</span></div>
+      <div class="wave" id="wave"><div class="pill" id="pill">0:00</div></div>
+    </div>
+
+    <div class="p-actions">
+      <div class="act" id="groupBtn">
+        <svg viewBox="0 0 24 24"><path d="M4 7h10M4 12h16M4 17h7"/></svg>
+        分组 <span class="cnt" id="grpCnt">1</span>
+      </div>
+      <div class="act mark" id="markBtn">
+        <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+        标记此刻
+      </div>
+    </div>
+
+    <div class="transport">
+      <div class="tp" style="width:20px;height:20px"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 6v12M20 6l-9 6 9 6z"/></svg></div>
+      <div class="tp" id="play" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="tp" style="width:20px;height:20px"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17 6v12M4 6l9 6-9 6z"/></svg></div>
+    </div>
+
+    <div class="scrim" id="scrim"></div>
+    <div class="sheet" id="sheet">
+      <div class="grab"></div>
+      <h3>分组</h3>
+      <div class="sh-sub">「城市清晨」所属分组 · 可多选，取消勾选即移出（不影响默认列表）</div>
+      <div id="grpOpts"></div>
+      <div class="grp-new" id="grpNew"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新建分组</div>
+      <div class="newrow" id="newRow" style="display:none"><input id="newName" placeholder="分组名称，如 播客精选" /><button id="newOk">创建</button></div>
+    </div>
+
+  </div></div>
+  <div class="foot">播放页定稿 · 精修2 湖水青 · 收藏位改「分组」</div>
+
+<script>
+  const DUR=228,N=60;
+  const amps=Array.from({length:N},(_,i)=>{const env=Math.sin(i/N*Math.PI);const d=.35+.65*Math.abs(Math.sin(i*.9)*Math.cos(i*.37));return Math.max(.14,Math.min(1,env*d+(Math.random()*.1-.02)));});
+  const fmt=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  const colors={采访:'#ff9a6b',灵感速记:'#b08bff',环境声:'#2ec98a','播客精选':'#17b3c6'};
+  let groups=[{name:'采访',n:2},{name:'灵感速记',n:2},{name:'环境声',n:3}];
+  let member=new Set(['环境声']);   // 当前曲目所属分组
+  let progress=.30, playing=false;
+  const markers=[.14,.42,.72];
+  const $=id=>document.getElementById(id);
+  const params=new URLSearchParams(location.search);
+
+  const wave=$('wave'),pill=$('pill');const bars=[];
+  amps.forEach(a=>{const b=document.createElement('div');b.className='bar';b.style.height=(84*.14+a*84*.8)+'px';wave.appendChild(b);bars.push(b);});
+  function renderMarkers(){document.querySelectorAll('.marker').forEach(e=>e.remove());const w=wave.clientWidth,h=wave.clientHeight;markers.forEach(f=>{const m=document.createElement('div');m.className='marker';m.style.left=(f*w)+'px';m.style.height=(h+6)+'px';m.innerHTML=`<div class="flag">${fmt(f*DUR)}</div>`;wave.appendChild(m);});}
+  function render(){const hi=Math.round(progress*(N-1));bars.forEach((b,i)=>b.classList.toggle('played',i<=hi));const w=wave.clientWidth;pill.style.left=(progress*w)+'px';pill.textContent=fmt(progress*DUR);$('curTime').textContent=fmt(progress*DUR);}
+  let drag=false,last=-1;
+  function setX(x){const r=wave.getBoundingClientRect();progress=Math.max(0,Math.min(1,(x-r.left)/r.width));render();const hi=Math.round(progress*(N-1));if(hi!==last&&last!==-1&&navigator.vibrate)navigator.vibrate(6);last=hi;}
+  wave.addEventListener('pointerdown',e=>{drag=true;wave.setPointerCapture(e.pointerId);last=Math.round(progress*(N-1));setX(e.clientX);});
+  wave.addEventListener('pointermove',e=>{if(drag)setX(e.clientX);});
+  wave.addEventListener('pointerup',()=>{drag=false;last=-1;});
+  window.addEventListener('resize',()=>{render();renderMarkers();});
+
+  $('markBtn').onclick=()=>{const b=$('markBtn');b.classList.add('on');setTimeout(()=>b.classList.remove('on'),450);};
+  $('play').onclick=()=>{playing=!playing;$('play').querySelector('svg').innerHTML=playing?'<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';};
+
+  // ---- group sheet ----
+  function updateCnt(){$('grpCnt').textContent=member.size;$('grpCnt').style.display=member.size?'inline':'none';}
+  function renderGrpOpts(){const box=$('grpOpts');box.innerHTML='';
+    groups.forEach(g=>{const on=member.has(g.name);const el=document.createElement('div');el.className='grp-opt';
+      el.innerHTML=`<span class="dot" style="background:${colors[g.name]||'#8f93a0'}"></span>
+        <span class="gname">${g.name}<div class="gsub">${g.n} 段音频</div></span>
+        <div class="check ${on?'on':''}"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>`;
+      el.onclick=()=>{if(member.has(g.name)){member.delete(g.name);g.n--;}else{member.add(g.name);g.n++;}renderGrpOpts();updateCnt();};
+      box.appendChild(el);});}
+  function openSheet(){renderGrpOpts();$('scrim').classList.add('on');$('sheet').classList.add('on');}
+  function closeSheet(){$('scrim').classList.remove('on');$('sheet').classList.remove('on');$('newRow').style.display='none';$('newName').value='';}
+  $('groupBtn').onclick=openSheet;
+  $('scrim').onclick=closeSheet;
+  $('grpNew').onclick=()=>{$('newRow').style.display='flex';setTimeout(()=>$('newName').focus(),50);};
+  $('newOk').onclick=()=>{const n=$('newName').value.trim();if(!n)return;groups.push({name:n,n:1});if(!colors[n])colors[n]='#17b3c6';member.add(n);$('newName').value='';$('newRow').style.display='none';renderGrpOpts();updateCnt();};
+
+  $('totTime').textContent='/ '+fmt(DUR);
+  render();updateCnt();setTimeout(renderMarkers,20);
+  if(params.get('sheet')==='1')openSheet();
+</script>
+</body>
+</html>
