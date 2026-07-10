@@ -128,7 +128,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Capture Library and Player
+      - name: Capture design states
         run: |
           set -euo pipefail
           APP_PATH="$GITHUB_WORKSPACE/build/DesignPreview/Build/Products/Debug-iphonesimulator/SolaPlayer.app"

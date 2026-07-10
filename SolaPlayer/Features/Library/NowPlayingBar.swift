@@ -54,10 +54,9 @@ struct NowPlayingBar: View {
                 action: onTogglePlayback
             )
             .labelStyle(.iconOnly)
-            .foregroundStyle(.white)
+            .foregroundStyle(colorScheme == .dark ? AppColor.ink : .white)
             .frame(width: 44, height: 44)
             .background(colorScheme == .dark ? Color.white : AppColor.ink, in: .circle)
-            .foregroundStyle(colorScheme == .dark ? AppColor.ink : .white)
         }
         .padding(.leading, 10)
         .padding(.trailing, 12)

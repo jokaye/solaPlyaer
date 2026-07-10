@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct PlayerView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @Bindable var store: PlayerStore
     @Bindable var libraryStore: LibraryStore
     @Bindable var markerStore: MarkerStore
@@ -119,8 +121,14 @@ struct PlayerView: View {
         .tint(.white)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("返回", systemImage: "chevron.left", action: dismiss.callAsFunction)
+                    .labelStyle(.iconOnly)
+                    .foregroundStyle(.white)
+            }
             ToolbarItem(placement: .principal) {
                 Button(action: showQueue) {
                     HStack(spacing: 4) {
@@ -137,10 +145,14 @@ struct PlayerView: View {
                 .accessibilityHint("展开当前播放队列")
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Menu("更多", systemImage: "ellipsis") {
+                Menu {
                     Button("标记列表", systemImage: "bookmark", action: showMarkers)
                     Button("加入分组", systemImage: "rectangle.3.group", action: showGroupPicker)
                         .disabled(currentLibraryItem == nil)
+                } label: {
+                    Label("更多", systemImage: "ellipsis")
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.white)
                 }
                 .disabled(store.currentItem == nil)
             }
@@ -173,7 +185,7 @@ struct PlayerView: View {
             await loadWaveform()
         }
         .task {
-            configureDesignPreviewIfNeeded()
+            await configureDesignPreviewIfNeeded()
         }
     }
 
@@ -299,12 +311,20 @@ struct PlayerView: View {
         }
     }
 
-    private func configureDesignPreviewIfNeeded() {
+    private func configureDesignPreviewIfNeeded() async {
         #if DEBUG
         switch ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"] {
         case "markers":
+            try? await Task.sleep(for: .seconds(1))
+            guard Task.isCancelled == false else {
+                return
+            }
             isShowingMarkers = true
         case "queue":
+            try? await Task.sleep(for: .seconds(1))
+            guard Task.isCancelled == false else {
+                return
+            }
             isShowingQueue = true
         default:
             break

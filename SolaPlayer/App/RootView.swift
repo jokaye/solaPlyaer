@@ -45,6 +45,7 @@ struct RootView: View {
                     }
                 }
         }
+        .tint(AppColor.ink)
     }
 
     private func play(_ item: AudioItem, in scope: PlaybackScope) {
