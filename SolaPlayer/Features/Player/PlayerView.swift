@@ -172,6 +172,9 @@ struct PlayerView: View {
             loadMarkers(for: currentItemID)
             await loadWaveform()
         }
+        .task {
+            configureDesignPreviewIfNeeded()
+        }
     }
 
     private var palette: AppPalette {
@@ -294,5 +297,18 @@ struct PlayerView: View {
         } catch {
             presentedError = PresentedError(error)
         }
+    }
+
+    private func configureDesignPreviewIfNeeded() {
+        #if DEBUG
+        switch ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"] {
+        case "markers":
+            isShowingMarkers = true
+        case "queue":
+            isShowingQueue = true
+        default:
+            break
+        }
+        #endif
     }
 }

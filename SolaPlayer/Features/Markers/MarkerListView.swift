@@ -24,6 +24,9 @@ struct MarkerListView: View {
                             MarkerRowView(marker: marker)
                         }
                         .buttonStyle(.plain)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                         .contextMenu {
                             Button("编辑", systemImage: "pencil") {
                                 markerToEdit = marker
@@ -40,6 +43,9 @@ struct MarkerListView: View {
                     }
                 }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(LibraryBackground())
             .navigationTitle("时刻标记")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -57,6 +63,7 @@ struct MarkerListView: View {
             }
         }
         .presentationDetents([.medium, .large])
+        .presentationBackground(.ultraThinMaterial)
     }
 
     private func jump(to marker: Marker) {

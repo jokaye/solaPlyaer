@@ -37,7 +37,7 @@ struct SolaPlayerApp: App {
 
             let modelContainer = try AppModelContainer.make(inMemory: previewRoute != nil)
             #if DEBUG
-            if previewRoute != nil {
+            if previewRoute != nil, previewRoute != "empty-library" {
                 try DesignPreviewSeeder.seed(modelContext: modelContainer.mainContext)
             }
             #endif
@@ -81,8 +81,12 @@ struct SolaPlayerApp: App {
             }
 
             let initialRoute: RootRoute?
-            if previewRoute == "player", let itemID = libraryStore.items.first?.id {
+            if let previewRoute,
+               ["player", "markers", "queue"].contains(previewRoute),
+               let itemID = libraryStore.items.first?.id {
                 initialRoute = .player(scope: .master, itemID: itemID)
+            } else if previewRoute == "settings" {
+                initialRoute = .settings
             } else {
                 initialRoute = nil
             }

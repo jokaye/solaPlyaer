@@ -1,17 +1,18 @@
 import SwiftUI
 
 struct ImportCardView: View {
+    let isEmpty: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Label {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("导入音频")
+                    Text(isEmpty ? "导入第一段音频" : "导入音频")
                         .font(.headline)
                     Text("文件 · 文件夹 · 链接 · AirDrop")
                         .font(.subheadline)
-                        .foregroundStyle(AppColor.secondaryInk)
+                        .foregroundStyle(.secondary)
                 }
             } icon: {
                 Image(systemName: "square.and.arrow.down")

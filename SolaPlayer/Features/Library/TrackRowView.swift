@@ -43,12 +43,12 @@ struct TrackRowView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(item.title)
                             .appFont(AppTypography.libraryTrackTitle)
-                            .foregroundStyle(AppColor.ink)
+                            .foregroundStyle(.primary)
                             .lineLimit(1)
 
                         Text("所属 \(membershipCount) 个分组 · \(item.duration.durationText)")
                             .font(.subheadline)
-                            .foregroundStyle(AppColor.secondaryInk)
+                            .foregroundStyle(.secondary)
                             .lineLimit(1)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)

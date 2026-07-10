@@ -37,6 +37,7 @@
 		45C2118BBD0BF13336DA10C9 /* WaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA352F50BB22A99114CDEBB /* WaveformService.swift */; };
 		47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C337ED7E0CD0FF17857391 /* BuildInfo.swift */; };
 		49337E3572746CBA09AE232D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E68759516AC6B23889CFAFD /* RootView.swift */; };
+		4A2581396483AA4D89A1E595 /* PaletteSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */; };
 		4BCDDE83BA389BD196B3C800 /* AppPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882E8F84F9F37AA950591D7D /* AppPreferenceKey.swift */; };
 		4E89ABAA149D927320010712 /* MarkerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863C3C8C400A2B1E0731A687 /* MarkerRowView.swift */; };
 		5120FAB0809A7CE22721B65D /* LibraryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AD0DB320A6DCD5238AB73C /* LibraryHeaderView.swift */; };
@@ -83,6 +84,7 @@
 		B4C1F10913852217A904A6A4 /* LibraryItemDeletionHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FFC82C203485540124CCC0 /* LibraryItemDeletionHandlerTests.swift */; };
 		B62D1E90CCFEEB4FC02E142C /* StubAudioImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB17569069DA689E6A1E6BB3 /* StubAudioImporter.swift */; };
 		B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413C6D3C1B4F702ABD07422C /* SolaPlayerMigrationPlan.swift */; };
+		B71D9481A5398D02D9BE9063 /* SettingsPreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */; };
 		B77B9F6127588906B017C27E /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC9F9860DF94B597ACFC3A3 /* Membership.swift */; };
 		B979287A0C50B44C4CC68815 /* SolaPlayerSchemaV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352EACA83480B06A95ABEFA7 /* SolaPlayerSchemaV2.swift */; };
 		BB0D3C3CDA2D556745E6602E /* PlayerGlassButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */; };
@@ -146,6 +148,7 @@
 		451413C08F347C20D3522FFD /* ImportCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCardView.swift; sourceTree = "<group>"; };
 		45A16B959E4EFB8D2D52B99E /* RootRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootRoute.swift; sourceTree = "<group>"; };
 		4A781C07C468A8AE958B510E /* SolaPlayerSchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerSchemaV1.swift; sourceTree = "<group>"; };
+		4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteSelectionRow.swift; sourceTree = "<group>"; };
 		4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHaptic.swift; sourceTree = "<group>"; };
 		4E68759516AC6B23889CFAFD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4FB5E0385E803423FCB62B2E /* AudioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGroup.swift; sourceTree = "<group>"; };
@@ -208,6 +211,7 @@
 		B42B19529254AE6ED383B5CC /* NameEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditorSheet.swift; sourceTree = "<group>"; };
 		B587481DAFA171EC600C9C57 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		B7CDBBEC2DC39D462AAADE0D /* RemoteAudioDownloading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAudioDownloading.swift; sourceTree = "<group>"; };
+		BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPreviewCard.swift; sourceTree = "<group>"; };
 		BE008AAB4B292A5ECCA6FDB3 /* MarkerStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStoreTests.swift; sourceTree = "<group>"; };
 		C249DFAC7FE5E0A3D68BF347 /* WaveformServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformServiceError.swift; sourceTree = "<group>"; };
 		C424562CC7026D0C00CE2338 /* TransportControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportControls.swift; sourceTree = "<group>"; };
@@ -369,6 +373,8 @@
 		84C20266AB2D710B4C7AE6BB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */,
+				BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */,
 				D73E837293DA0FF29F01618C /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -690,6 +696,7 @@
 				65A0E544BFEC28765F4A1DB4 /* MiniWaveformView.swift in Sources */,
 				E13E3D4F6B36A859B9281CBC /* NameEditorSheet.swift in Sources */,
 				8F8DD944EEDE27B0B083846D /* NowPlayingBar.swift in Sources */,
+				4A2581396483AA4D89A1E595 /* PaletteSelectionRow.swift in Sources */,
 				D641152086C2B7C39DD499ED /* PersistenceService.swift in Sources */,
 				F108DB3B3D86082DD83E94B2 /* PlaybackQueueItem.swift in Sources */,
 				721452DD41A62C733A1552DB /* PlaybackQueueSheet.swift in Sources */,
@@ -707,6 +714,7 @@
 				370F870AEF1DB8C56440988B /* ScopeChipButton.swift in Sources */,
 				1B690773A1EECF7D5FDCAC4B /* ScrubDirection.swift in Sources */,
 				9801D05AFE9694B0F0521A80 /* ScrubberPillView.swift in Sources */,
+				B71D9481A5398D02D9BE9063 /* SettingsPreviewCard.swift in Sources */,
 				FE18D9A4613C362493D57F61 /* SettingsView.swift in Sources */,
 				2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */,
 				B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */,

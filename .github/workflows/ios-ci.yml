@@ -142,6 +142,14 @@ jobs:
           xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/library.png"
 
           xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          xcrun simctl ui "$DEVICE_ID" appearance dark
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=library \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/library-dark.png"
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          xcrun simctl ui "$DEVICE_ID" appearance light
+
           SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=group-edit \
             xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
           sleep 4
@@ -154,10 +162,34 @@ jobs:
           xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/group-sheet.png"
 
           xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=empty-library \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/empty-library.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=settings \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/settings.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
           SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=player \
             xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
           sleep 4
           xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/player.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=markers \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/markers.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=queue \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/queue.png"
 
       - name: Upload design screenshots
         uses: actions/upload-artifact@v4

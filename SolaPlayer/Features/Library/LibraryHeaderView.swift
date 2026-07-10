@@ -17,7 +17,7 @@ struct LibraryHeaderView: View {
 
                 Text("\(itemCount) 段音频 · \(groupCount) 个分组")
                     .font(.subheadline)
-                    .foregroundStyle(AppColor.secondaryInk)
+                    .foregroundStyle(.secondary)
             }
 
             Spacer()
@@ -34,16 +34,16 @@ struct LibraryHeaderView: View {
                 }
             }
             .labelStyle(.iconOnly)
-            .foregroundStyle(AppColor.ink)
+            .foregroundStyle(.primary)
             .frame(width: 40, height: 40)
-            .background(AppColor.ink.opacity(0.055), in: .circle)
+            .background(.primary.opacity(0.055), in: .circle)
 
             Button("导入音频", systemImage: "plus", action: onImport)
                 .labelStyle(.iconOnly)
                 .font(.system(size: 20, weight: .regular))
-                .foregroundStyle(AppColor.ink)
+                .foregroundStyle(.primary)
                 .frame(width: 48, height: 48)
-                .background(AppColor.ink.opacity(0.065), in: .circle)
+                .background(.primary.opacity(0.065), in: .circle)
                 .disabled(isImporting)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

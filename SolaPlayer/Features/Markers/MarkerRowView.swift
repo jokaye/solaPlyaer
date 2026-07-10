@@ -7,7 +7,7 @@ struct MarkerRowView: View {
         HStack(alignment: .top, spacing: AppSpacing.standard) {
             Text(marker.time.durationText)
                 .font(.system(.body, design: .monospaced))
-                .foregroundStyle(AppColor.ink)
+                .foregroundStyle(.primary)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(marker.title)
@@ -28,6 +28,13 @@ struct MarkerRowView: View {
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)
+        }
+        .padding(.horizontal, AppSpacing.standard)
+        .padding(.vertical, 14)
+        .background(.white.opacity(0.9), in: .rect(cornerRadius: 18))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(.white.opacity(0.55), lineWidth: 1)
         }
         .contentShape(.rect)
     }

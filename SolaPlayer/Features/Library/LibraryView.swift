@@ -68,7 +68,7 @@ struct LibraryView: View {
 
             Section {
                 if store.scope == .master {
-                    ImportCardView(action: showImporter)
+                    ImportCardView(isEmpty: store.items.isEmpty, action: showImporter)
                         .listRowInsets(
                             EdgeInsets(
                                 top: 0,
@@ -120,7 +120,7 @@ struct LibraryView: View {
                 HStack {
                     Text(scopeSummary)
                         .font(.subheadline)
-                        .foregroundStyle(AppColor.secondaryInk)
+                        .foregroundStyle(.secondary)
 
                     Spacer()
 

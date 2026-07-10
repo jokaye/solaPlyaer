@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct NowPlayingBar: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let item: PlaybackQueueItem
     let sourceName: String
     let isPlaying: Bool
@@ -26,7 +28,7 @@ struct NowPlayingBar: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(item.title)
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(AppColor.ink)
+                            .foregroundStyle(.primary)
                             .lineLimit(1)
 
                         HStack(spacing: 5) {
@@ -54,7 +56,8 @@ struct NowPlayingBar: View {
             .labelStyle(.iconOnly)
             .foregroundStyle(.white)
             .frame(width: 44, height: 44)
-            .background(AppColor.ink, in: .circle)
+            .background(colorScheme == .dark ? Color.white : AppColor.ink, in: .circle)
+            .foregroundStyle(colorScheme == .dark ? AppColor.ink : .white)
         }
         .padding(.leading, 10)
         .padding(.trailing, 12)
