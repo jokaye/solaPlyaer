@@ -27,6 +27,30 @@ struct PlayerStoreTests {
     }
 
     @MainActor
+    @Test("删除当前曲后下一首加载失败会停止并清空播放会话")
+    func deletingCurrentItemStopsWhenNextLoadFails() throws {
+        let items = makeItems(count: 3)
+        let engine = StubAudioEngine()
+        let store = PlayerStore(
+            engine: engine,
+            waveformService: StubWaveformService()
+        )
+        try store.start(
+            queue: items.map(PlaybackQueueItem.init),
+            initialItemID: items[1].id,
+            sourceName: "测试分组"
+        )
+        engine.failingLoadURLs = [try #require(items[2].localCopyURL)]
+
+        store.removeDeletedItem(id: items[1].id)
+
+        #expect(store.queue.isEmpty)
+        #expect(store.currentItem == nil)
+        #expect(store.isPlaying == false)
+        #expect(engine.stopCount == 1)
+    }
+
+    @MainActor
     @Test("可从固定队列中选择另一首并立即播放")
     func selectingQueueItemLoadsAndPlaysIt() throws {
         let items = makeItems(count: 3)
@@ -71,6 +95,56 @@ struct PlayerStoreTests {
         }
 
         #expect(store.currentItem?.id == items[0].id)
+    }
+
+    @MainActor
+    @Test("下一首加载失败时保留原曲和播放状态")
+    func failedNextItemLoadPreservesCurrentPlayback() throws {
+        let items = makeItems(count: 2)
+        let engine = StubAudioEngine()
+        let store = PlayerStore(
+            engine: engine,
+            waveformService: StubWaveformService()
+        )
+        try store.start(
+            queue: items.map(PlaybackQueueItem.init),
+            initialItemID: items[0].id,
+            sourceName: "默认列表"
+        )
+        engine.failingLoadURLs = [try #require(items[1].localCopyURL)]
+
+        #expect(throws: TestFailure.loadFailed) {
+            try store.playNext()
+        }
+
+        #expect(store.currentItem?.id == items[0].id)
+        #expect(store.isPlaying)
+        #expect(engine.loadedURLs.last == items[0].localCopyURL)
+    }
+
+    @MainActor
+    @Test("下一首播放失败时恢复原曲和播放状态")
+    func failedNextItemPlaybackRestoresCurrentPlayback() throws {
+        let items = makeItems(count: 2)
+        let engine = StubAudioEngine()
+        let store = PlayerStore(
+            engine: engine,
+            waveformService: StubWaveformService()
+        )
+        try store.start(
+            queue: items.map(PlaybackQueueItem.init),
+            initialItemID: items[0].id,
+            sourceName: "默认列表"
+        )
+        engine.nextPlayError = TestFailure.playFailed
+
+        #expect(throws: TestFailure.playFailed) {
+            try store.playNext()
+        }
+
+        #expect(store.currentItem?.id == items[0].id)
+        #expect(store.isPlaying)
+        #expect(engine.loadedURLs.last == items[0].localCopyURL)
     }
 
     @MainActor

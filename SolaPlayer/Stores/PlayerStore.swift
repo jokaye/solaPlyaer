@@ -4,6 +4,12 @@ import Observation
 @MainActor
 @Observable
 final class PlayerStore {
+    private struct PlaybackSnapshot {
+        let item: PlaybackQueueItem
+        let currentTime: TimeInterval
+        let wasPlaying: Bool
+    }
+
     private let engine: any AudioPlaying
     private let waveformService: any WaveformProviding
 
@@ -60,10 +66,12 @@ final class PlayerStore {
             throw PlayerStoreError.itemNotFound
         }
 
+        let item = queue[initialIndex]
+        try activateWithRollback(item, autoplay: true)
         self.queue = queue
         currentIndex = initialIndex
         self.sourceName = sourceName
-        try loadCurrent(autoplay: true)
+        commitLoadedState(for: item)
     }
 
     func togglePlayback() throws {
@@ -85,8 +93,8 @@ final class PlayerStore {
             throw PlayerStoreError.emptyQueue
         }
         let shouldResume = engine.isPlaying
-        currentIndex = (currentIndex + 1) % queue.count
-        try loadCurrent(autoplay: shouldResume)
+        let nextIndex = (currentIndex + 1) % queue.count
+        try switchCurrentItem(to: nextIndex, autoplay: shouldResume)
     }
 
     func playPrevious() throws {
@@ -99,8 +107,8 @@ final class PlayerStore {
         }
 
         let shouldResume = engine.isPlaying
-        currentIndex = (currentIndex - 1 + queue.count) % queue.count
-        try loadCurrent(autoplay: shouldResume)
+        let previousIndex = (currentIndex - 1 + queue.count) % queue.count
+        try switchCurrentItem(to: previousIndex, autoplay: shouldResume)
     }
 
     func playItem(id: UUID) throws {
@@ -111,8 +119,7 @@ final class PlayerStore {
             return
         }
 
-        currentIndex = requestedIndex
-        try loadCurrent(autoplay: true)
+        try switchCurrentItem(to: requestedIndex, autoplay: true)
     }
 
     func updateScrubbing(to progress: Double) {
@@ -190,6 +197,7 @@ final class PlayerStore {
             do {
                 try loadCurrent(autoplay: shouldResume)
             } catch {
+                resetEmptyQueue()
                 pendingPlaybackError = error
             }
         } else if removedIndex < currentIndex {
@@ -244,11 +252,71 @@ final class PlayerStore {
         guard let item = currentItem else {
             throw PlayerStoreError.itemNotFound
         }
+        try activate(item, autoplay: autoplay)
+        commitLoadedState(for: item)
+    }
+
+    private func switchCurrentItem(to index: Int, autoplay: Bool) throws {
+        guard queue.indices.contains(index) else {
+            throw PlayerStoreError.itemNotFound
+        }
+        let item = queue[index]
+        try activateWithRollback(item, autoplay: autoplay)
+        currentIndex = index
+        commitLoadedState(for: item)
+    }
+
+    private func activateWithRollback(_ item: PlaybackQueueItem, autoplay: Bool) throws {
+        let snapshot = currentItem.map {
+            PlaybackSnapshot(
+                item: $0,
+                currentTime: currentTime,
+                wasPlaying: engine.isPlaying
+            )
+        }
+
+        do {
+            try activate(item, autoplay: autoplay)
+        } catch let activationError {
+            guard let snapshot else {
+                engine.stop()
+                throw activationError
+            }
+            do {
+                try restore(snapshot)
+            } catch let recoveryError {
+                engine.stop()
+                resetEmptyQueue()
+                throw PlayerStoreError.playbackRecoveryFailed(
+                    activation: activationError.localizedDescription,
+                    recovery: recoveryError.localizedDescription
+                )
+            }
+            throw activationError
+        }
+    }
+
+    private func activate(_ item: PlaybackQueueItem, autoplay: Bool) throws {
         guard let localCopyURL = item.localCopyURL else {
             throw PlayerStoreError.localCopyUnavailable(item.title)
         }
 
         try engine.load(url: localCopyURL)
+        if autoplay {
+            try engine.play()
+        }
+    }
+
+    private func restore(_ snapshot: PlaybackSnapshot) throws {
+        try activate(snapshot.item, autoplay: false)
+        engine.seek(to: snapshot.currentTime)
+        if snapshot.wasPlaying {
+            try engine.play()
+        }
+        refreshPlaybackState()
+    }
+
+    private func commitLoadedState(for item: PlaybackQueueItem) {
         currentTime = 0
         duration = engine.duration > 0 ? engine.duration : item.duration
         samples = placeholderSamples(for: item.id)
@@ -256,9 +324,6 @@ final class PlayerStore {
         scrubDirection = nil
         isScrubbing = false
 
-        if autoplay {
-            try engine.play()
-        }
         refreshPlaybackState()
     }
 

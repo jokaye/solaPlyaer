@@ -8,8 +8,13 @@ final class StubAudioEngine: AudioPlaying {
     private(set) var isPlaying = false
     private(set) var loadedURLs: [URL] = []
     private(set) var stopCount = 0
+    var failingLoadURLs: Set<URL> = []
+    var nextPlayError: Error?
 
     func load(url: URL) throws {
+        if failingLoadURLs.contains(url) {
+            throw TestFailure.loadFailed
+        }
         loadedURLs.append(url)
         currentTime = 0
         duration = 100
@@ -17,6 +22,10 @@ final class StubAudioEngine: AudioPlaying {
     }
 
     func play() throws {
+        if let nextPlayError {
+            self.nextPlayError = nil
+            throw nextPlayError
+        }
         isPlaying = true
     }
 

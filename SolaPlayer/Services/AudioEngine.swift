@@ -40,11 +40,11 @@ final class AudioEngine: AudioPlaying {
             throw AudioEngineError.fileNotFound(url.path)
         }
 
-        player?.stop()
         let nextPlayer = try AVAudioPlayer(contentsOf: url)
         guard nextPlayer.prepareToPlay() else {
             throw AudioEngineError.loadFailed
         }
+        player?.stop()
         player = nextPlayer
     }
 

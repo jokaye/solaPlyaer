@@ -31,7 +31,7 @@ struct TrackRowView: View {
                             .foregroundStyle(AppColor.ink)
                             .lineLimit(1)
 
-                        Text("所属 (membershipCount) 个分组 · \(item.duration.durationText)")
+                        Text("所属 \(membershipCount) 个分组 · \(item.duration.durationText)")
                             .font(.subheadline)
                             .foregroundStyle(AppColor.secondaryInk)
                             .lineLimit(1)
