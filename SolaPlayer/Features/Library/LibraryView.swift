@@ -17,6 +17,7 @@ struct LibraryView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var presentedError: PresentedError?
     @State private var selectedItemIDs: Set<UUID> = []
+    @State private var editMode: EditMode = .inactive
 
     private func setPalette(_ palette: AppPalette?, for item: AudioItem) {
         do {
@@ -148,6 +149,7 @@ struct LibraryView: View {
                 }
             }
         }
+        .environment(\.editMode, $editMode)
     }
 
     private var scopeSummary: String {
@@ -231,6 +233,7 @@ struct LibraryView: View {
             await dismissRemovalAfterDelay(store.pendingRemoval)
         }
         .task {
+            configureDesignPreviewIfNeeded()
             await reconcilePendingFileDeletions()
         }
     }
@@ -357,6 +360,26 @@ struct LibraryView: View {
         } catch {
             present(error)
         }
+    }
+
+    private func configureDesignPreviewIfNeeded() {
+        #if DEBUG
+        switch ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"] {
+        case "group-edit":
+            guard let group = store.groups.first(where: { $0.name == "灵感速记" }) else {
+                return
+            }
+            try? store.setScope(.group(group.id))
+            editMode = .active
+        case "group-sheet":
+            guard let item = store.items.first else {
+                return
+            }
+            groupPickerRequest = GroupPickerRequest(items: [item])
+        default:
+            break
+        }
+        #endif
     }
 
     private func dismissRemovalAfterDelay(_ removal: MembershipRemoval?) async {

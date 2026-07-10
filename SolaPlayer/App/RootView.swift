@@ -7,6 +7,18 @@ struct RootView: View {
 
     @State private var path: [RootRoute] = []
 
+    init(
+        store: LibraryStore,
+        playerStore: PlayerStore,
+        markerStore: MarkerStore,
+        initialRoute: RootRoute? = nil
+    ) {
+        self.store = store
+        self.playerStore = playerStore
+        self.markerStore = markerStore
+        _path = State(initialValue: initialRoute.map { [$0] } ?? [])
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
             LibraryView(

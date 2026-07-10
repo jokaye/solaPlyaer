@@ -45,6 +45,7 @@
 		54FF8D03D4C175E3A8AA92F9 /* PlayerStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC80E518D3487F0289A3409 /* PlayerStoreError.swift */; };
 		59B518283AA2A5796EFEF512 /* ImportedAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8501C73D6DEDC36CBF0B93DC /* ImportedAudio.swift */; };
 		5B112D198BDD316B17628671 /* LibraryPersisting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0306D7EF467AEEC0C30D0552 /* LibraryPersisting.swift */; };
+		5E02FF5FDB4DE93D8E480204 /* DesignPreviewAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */; };
 		63A8263A53C510D7B79F0049 /* StubWaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39D4C6ACA6DE710B3FAF243 /* StubWaveformService.swift */; };
 		65A0E544BFEC28765F4A1DB4 /* MiniWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698067D848CF752210FE94A4 /* MiniWaveformView.swift */; };
 		698ADE3FF5C1A288246087A0 /* RemoteAudioDownloading.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CDBBEC2DC39D462AAADE0D /* RemoteAudioDownloading.swift */; };
@@ -52,6 +53,7 @@
 		6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C95532889AEE624311C1AD /* AppSpacing.swift */; };
 		70A2EC3CA0A9F964A959DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77BAFA78098510BA13C95A8B /* Assets.xcassets */; };
 		721452DD41A62C733A1552DB /* PlaybackQueueSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */; };
+		721E06D7438C1DCE27F523FA /* DesignPreviewWaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */; };
 		77D3C76A14F3F44CF8D6ECAF /* LibraryTestContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F844AD87B095073ECE489F3 /* LibraryTestContext.swift */; };
 		7877A62614C8273C301442F3 /* AppTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735450BDAEFEEBB74850AF7 /* AppTypography.swift */; };
 		81225DA6444B37DC1CA142EE /* GroupPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */; };
@@ -66,8 +68,10 @@
 		8FEF0A03A1DFE35BAC12D2F2 /* RemoteAudioImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AEB2D7FE91F10F8622912 /* RemoteAudioImportError.swift */; };
 		92A0CECA9A41E904737FDBB2 /* PlayerStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4849D637560EECCE0EAE3A9 /* PlayerStoreTests.swift */; };
 		97858FA5C2833ECDAA24598D /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */; };
+		9801D05AFE9694B0F0521A80 /* ScrubberPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */; };
 		982024D146A24FA14EDBBC5D /* AudioImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2712F1596A389791793E2E /* AudioImportError.swift */; };
 		9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840B3C14FF6253CA3EA07E96 /* AppRadius.swift */; };
+		A0CCB2492C96BED8F765BC22 /* DesignPreviewSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */; };
 		A4EFCB41D968301E2A086ADE /* DeletionTrackingImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8F985D75FE249FD32F8D9E /* DeletionTrackingImporter.swift */; };
 		A9FBA632EBC0F2CAA624B1CD /* LibraryBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780C08E8DD5D067338FA184E /* LibraryBackground.swift */; };
 		ABDC3FB24043CB081211D55E /* RootRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A16B959E4EFB8D2D52B99E /* RootRoute.swift */; };
@@ -126,6 +130,7 @@
 		22678A5C22F66B7A79564F5F /* TimeInterval+DurationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+DurationText.swift"; sourceTree = "<group>"; };
 		24291E583ACAB91181BA197A /* AudioPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaying.swift; sourceTree = "<group>"; };
 		24F948279F8972D9618653A7 /* StubAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubAudioEngine.swift; sourceTree = "<group>"; };
+		2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewSeeder.swift; sourceTree = "<group>"; };
 		2AC80E518D3487F0289A3409 /* PlayerStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStoreError.swift; sourceTree = "<group>"; };
 		3009D312917479C602273FE6 /* AppInitializationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationFailureView.swift; sourceTree = "<group>"; };
 		329C8611F4A8EB4B0B5F367A /* MarkerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStore.swift; sourceTree = "<group>"; };
@@ -155,6 +160,7 @@
 		609AEB2D7FE91F10F8622912 /* RemoteAudioImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAudioImportError.swift; sourceTree = "<group>"; };
 		624FD6047230089A7B6581AC /* TestTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTags.swift; sourceTree = "<group>"; };
 		63BD850E0C5903421026DEEE /* UndoSnackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoSnackbar.swift; sourceTree = "<group>"; };
+		63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewWaveformService.swift; sourceTree = "<group>"; };
 		673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPickerSheet.swift; sourceTree = "<group>"; };
 		698067D848CF752210FE94A4 /* MiniWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniWaveformView.swift; sourceTree = "<group>"; };
 		6E2712F1596A389791793E2E /* AudioImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportError.swift; sourceTree = "<group>"; };
@@ -212,10 +218,12 @@
 		E39D4C6ACA6DE710B3FAF243 /* StubWaveformService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubWaveformService.swift; sourceTree = "<group>"; };
 		E40DE026CC512CCF58DCBF80 /* NowPlayingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingBar.swift; sourceTree = "<group>"; };
 		E4849D637560EECCE0EAE3A9 /* PlayerStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStoreTests.swift; sourceTree = "<group>"; };
+		E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewAudioEngine.swift; sourceTree = "<group>"; };
 		EC8F985D75FE249FD32F8D9E /* DeletionTrackingImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionTrackingImporter.swift; sourceTree = "<group>"; };
 		EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontModifier.swift; sourceTree = "<group>"; };
 		F8CD576B93A9205DE9F348CD /* WaveformScrubber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformScrubber.swift; sourceTree = "<group>"; };
 		FA675418CC557FFB44DAFF28 /* ImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportService.swift; sourceTree = "<group>"; };
+		FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubberPillView.swift; sourceTree = "<group>"; };
 		FB17569069DA689E6A1E6BB3 /* StubAudioImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubAudioImporter.swift; sourceTree = "<group>"; };
 		FE6F4B30743BCDD6B21E4D5D /* ImportServiceDeletionRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportServiceDeletionRecoveryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -264,6 +272,9 @@
 				3009D312917479C602273FE6 /* AppInitializationFailureView.swift */,
 				B587481DAFA171EC600C9C57 /* AppModelContainer.swift */,
 				882E8F84F9F37AA950591D7D /* AppPreferenceKey.swift */,
+				E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */,
+				2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */,
+				63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */,
 				45A16B959E4EFB8D2D52B99E /* RootRoute.swift */,
 				4E68759516AC6B23889CFAFD /* RootView.swift */,
 				DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */,
@@ -287,6 +298,7 @@
 				D59C756AB57F33176ECDF1EE /* GradientBackground.swift */,
 				7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */,
 				CC76E9983FB7B298AFDD64E1 /* PlayerView.swift */,
+				FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */,
 				C424562CC7026D0C00CE2338 /* TransportControls.swift */,
 				F8CD576B93A9205DE9F348CD /* WaveformScrubber.swift */,
 			);
@@ -642,6 +654,9 @@
 				3DDD8E32AC4184FAF1D117E1 /* AudioItem.swift in Sources */,
 				87C2752B52AA35914EAF9D54 /* AudioPlaying.swift in Sources */,
 				47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */,
+				5E02FF5FDB4DE93D8E480204 /* DesignPreviewAudioEngine.swift in Sources */,
+				A0CCB2492C96BED8F765BC22 /* DesignPreviewSeeder.swift in Sources */,
+				721E06D7438C1DCE27F523FA /* DesignPreviewWaveformService.swift in Sources */,
 				33C16573490E7E80AD1A297D /* GradientBackground.swift in Sources */,
 				424E74201E0BD14C157663B6 /* GroupChipsView.swift in Sources */,
 				31E04A649B66C8F612B7E1A5 /* GroupPickerRequest.swift in Sources */,
@@ -683,6 +698,7 @@
 				49337E3572746CBA09AE232D /* RootView.swift in Sources */,
 				370F870AEF1DB8C56440988B /* ScopeChipButton.swift in Sources */,
 				1B690773A1EECF7D5FDCAC4B /* ScrubDirection.swift in Sources */,
+				9801D05AFE9694B0F0521A80 /* ScrubberPillView.swift in Sources */,
 				FE18D9A4613C362493D57F61 /* SettingsView.swift in Sources */,
 				2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */,
 				B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */,

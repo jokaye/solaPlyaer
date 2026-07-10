@@ -49,16 +49,6 @@ struct PlayerView: View {
 
                 Spacer(minLength: 80)
 
-                if store.isScrubbing, let direction = store.scrubDirection {
-                    Label(direction.label, systemImage: direction.systemImage)
-                        .appFont(AppTypography.pill)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(.white.opacity(0.18), in: .capsule)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .transition(.opacity)
-                }
-
                 HStack {
                     Text("0:00")
                     Spacer()
@@ -71,7 +61,7 @@ struct PlayerView: View {
                 .padding(.horizontal, 4)
                 .padding(.bottom, 2)
 
-                ZStack {
+                ZStack(alignment: .topTrailing) {
                     WaveformScrubber(
                         samples: store.samples,
                         progress: store.displayedProgress,
@@ -90,6 +80,16 @@ struct PlayerView: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
                             .background(.black.opacity(0.12), in: .capsule)
+                    }
+
+                    if store.isScrubbing, let direction = store.scrubDirection {
+                        Label(direction.label, systemImage: direction.systemImage)
+                            .appFont(AppTypography.pill)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(.white.opacity(0.18), in: .capsule)
+                            .offset(y: -38)
+                            .transition(.opacity)
                     }
                 }
                 .frame(height: 104)

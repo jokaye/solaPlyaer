@@ -92,3 +92,77 @@ jobs:
           path: build/ipa/SolaPlayer-${{ steps.build_ipa.outputs.commit_sha }}-unsigned.ipa
           if-no-files-found: error
           retention-days: 30
+
+  capture-design-screenshots:
+    if: github.event_name == 'push'
+    needs: build-and-test
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Install XcodeGen
+        run: command -v xcodegen >/dev/null || brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Build design preview
+        run: |
+          set -euo pipefail
+          DEVICE_ID="$(xcrun simctl list devices available -j | python3 -c 'import json,sys; data=json.load(sys.stdin); print(next(device["udid"] for devices in data["devices"].values() for device in devices if device["name"] == "iPhone 16" and device["isAvailable"]))')"
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcodebuild \
+            -project SolaPlayer.xcodeproj \
+            -scheme SolaPlayer \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath build/DesignPreview \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Capture Library and Player
+        run: |
+          set -euo pipefail
+          APP_PATH="$GITHUB_WORKSPACE/build/DesignPreview/Build/Products/Debug-iphonesimulator/SolaPlayer.app"
+          SCREENSHOT_DIR="$GITHUB_WORKSPACE/build/design-screenshots"
+          mkdir -p "$SCREENSHOT_DIR"
+          xcrun simctl install "$DEVICE_ID" "$APP_PATH"
+
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=library \
+            xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/library.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=group-edit \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/group-edit.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=group-sheet \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/group-sheet.png"
+
+          xcrun simctl terminate "$DEVICE_ID" com.solaplayer.app
+          SIMCTL_CHILD_SOLA_DESIGN_PREVIEW=player \
+            xcrun simctl launch "$DEVICE_ID" com.solaplayer.app
+          sleep 4
+          xcrun simctl io "$DEVICE_ID" screenshot "$SCREENSHOT_DIR/player.png"
+
+      - name: Upload design screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: SolaPlayer-design-screenshots-${{ github.sha }}
+          path: build/design-screenshots/*.png
+          if-no-files-found: error
+          retention-days: 30

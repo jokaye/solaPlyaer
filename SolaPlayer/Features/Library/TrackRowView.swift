@@ -2,6 +2,9 @@ import SwiftUI
 
 struct TrackRowView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.editMode) private var editMode
+
+    @State private var isConfirmingRemoval = false
 
     let item: AudioItem
     let membershipCount: Int
@@ -17,6 +20,16 @@ struct TrackRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
+            if isEditing, canRemoveFromCurrentGroup {
+                Button("准备移出分组", systemImage: "minus", action: toggleRemovalConfirmation)
+                    .labelStyle(.iconOnly)
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 26, height: 26)
+                    .background(Color(red: 1, green: 0.37, blue: 0.48), in: .circle)
+                    .shadow(color: Color.red.opacity(0.28), radius: 5, y: 2)
+            }
+
             Button(action: onPlay) {
                 HStack(spacing: 12) {
                     (selectedPalette ?? .clearSky).gradient
@@ -43,44 +56,57 @@ struct TrackRowView: View {
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
+            .disabled(isEditing)
             .accessibilityHint("进入播放页")
 
-            Menu("曲目操作", systemImage: "ellipsis") {
-                Button("加入分组…", systemImage: "folder.badge.plus", action: onChooseGroups)
+            if isEditing, canRemoveFromCurrentGroup {
+                if isConfirmingRemoval {
+                    Button("移出", systemImage: "minus.circle", action: confirmRemoval)
+                        .font(.subheadline.weight(.semibold))
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.capsule)
+                        .tint(Color(red: 1, green: 0.37, blue: 0.48))
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                }
+            } else {
+                Menu("曲目操作", systemImage: "ellipsis") {
+                    Button("加入分组…", systemImage: "folder.badge.plus", action: onChooseGroups)
 
-                Menu("播放主题", systemImage: "paintpalette") {
-                    Button(
-                        "跟随全局",
-                        systemImage: selectedPalette == nil ? "checkmark" : "circle",
-                        action: { onSetPalette(nil) }
-                    )
-
-                    ForEach(AppPalette.allCases) { palette in
+                    Menu("播放主题", systemImage: "paintpalette") {
                         Button(
-                            palette.label,
-                            systemImage: selectedPalette?.rawValue == palette.rawValue
-                                ? "checkmark"
-                                : "circle",
-                            action: { onSetPalette(palette) }
+                            "跟随全局",
+                            systemImage: selectedPalette == nil ? "checkmark" : "circle",
+                            action: { onSetPalette(nil) }
+                        )
+
+                        ForEach(AppPalette.allCases) { palette in
+                            Button(
+                                palette.label,
+                                systemImage: selectedPalette?.rawValue == palette.rawValue
+                                    ? "checkmark"
+                                    : "circle",
+                                action: { onSetPalette(palette) }
+                            )
+                        }
+                    }
+
+                    if canRemoveFromCurrentGroup {
+                        Button(
+                            "移出当前分组",
+                            systemImage: "minus.circle",
+                            role: .destructive,
+                            action: onRemoveFromCurrentGroup
                         )
                     }
-                }
 
-                if canRemoveFromCurrentGroup {
-                    Button(
-                        "移出当前分组",
-                        systemImage: "minus.circle",
-                        role: .destructive,
-                        action: onRemoveFromCurrentGroup
-                    )
+                    Button("重命名", systemImage: "pencil", action: onRename)
+                    Button("彻底删除", systemImage: "trash", role: .destructive, action: onDelete)
                 }
-
-                Button("重命名", systemImage: "pencil", action: onRename)
-                Button("彻底删除", systemImage: "trash", role: .destructive, action: onDelete)
+                .labelStyle(.iconOnly)
+                .frame(minWidth: 44, minHeight: 44)
             }
-            .labelStyle(.iconOnly)
-            .frame(minWidth: 44, minHeight: 44)
         }
+        .animation(.easeInOut(duration: 0.22), value: isConfirmingRemoval)
         .padding(.horizontal, 10)
         .padding(.vertical, 9)
         .frame(minHeight: 70)
@@ -110,9 +136,27 @@ struct TrackRowView: View {
                 )
             }
         }
+        .onChange(of: isEditing) { _, editing in
+            if editing == false {
+                isConfirmingRemoval = false
+            }
+        }
+    }
+
+    private var isEditing: Bool {
+        editMode?.wrappedValue.isEditing == true
     }
 
     private var cardColor: Color {
         colorScheme == .dark ? Color.white.opacity(0.08) : .white.opacity(0.94)
+    }
+
+    private func toggleRemovalConfirmation() {
+        isConfirmingRemoval.toggle()
+    }
+
+    private func confirmRemoval() {
+        isConfirmingRemoval = false
+        onRemoveFromCurrentGroup()
     }
 }

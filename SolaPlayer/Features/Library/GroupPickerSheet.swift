@@ -12,6 +12,14 @@ struct GroupPickerSheet: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Text(sheetDescription)
+                        .font(.subheadline)
+                        .foregroundStyle(AppColor.secondaryInk)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                }
+
                 if store.groups.isEmpty {
                     ContentUnavailableView(
                         "还没有分组",
@@ -23,7 +31,12 @@ struct GroupPickerSheet: View {
                         Button {
                             toggle(group)
                         } label: {
-                            HStack {
+                            HStack(spacing: 12) {
+                                Circle()
+                                    .fill(groupPalette(for: group).colors.top)
+                                    .frame(width: 10, height: 10)
+                                    .accessibilityHidden(true)
+
                                 Text(group.name)
                                     .foregroundStyle(.primary)
                                 Spacer()
@@ -43,11 +56,23 @@ struct GroupPickerSheet: View {
                             }
                         }
                         .accessibilityValue(accessibilityValue(for: group))
+                        .frame(minHeight: 48)
                     }
                 }
 
                 Button("新建分组", systemImage: "plus", action: showCreateGroup)
+                    .foregroundStyle(AppPalette.lake.colors.top)
+                    .bold()
             }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .background(
+                LinearGradient(
+                    colors: [AppPalette.clearSky.colors.bottom.opacity(0.45), Color(uiColor: .systemBackground)],
+                    startPoint: .top,
+                    endPoint: .center
+                )
+            )
             .navigationTitle("加入分组")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -69,6 +94,17 @@ struct GroupPickerSheet: View {
 
     private func showCreateGroup() {
         isCreatingGroup = true
+    }
+
+    private var sheetDescription: String {
+        if items.count == 1, let item = items.first {
+            return "选择要把“\(item.title)”加入的分组，不影响默认列表。"
+        }
+        return "为已选择的 \(items.count) 段音频勾选分组，不影响默认列表。"
+    }
+
+    private func groupPalette(for group: AudioGroup) -> AppPalette {
+        group.colorKey.flatMap(AppPalette.init(rawValue:)) ?? .lake
     }
 
     private func toggle(_ group: AudioGroup) {
