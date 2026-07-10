@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum AppPalette: String, CaseIterable, Identifiable {
+enum AppPalette: String, CaseIterable, Identifiable, Hashable {
     case clearSky
     case lake
     case mint

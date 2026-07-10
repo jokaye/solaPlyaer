@@ -30,8 +30,8 @@ final class FailingPersistence: LibraryPersisting {
         base.insert(membership)
     }
 
-    func delete(_ item: AudioItem) {
-        base.delete(item)
+    func delete(_ item: AudioItem) throws {
+        try base.delete(item)
     }
 
     func delete(_ group: AudioGroup) {

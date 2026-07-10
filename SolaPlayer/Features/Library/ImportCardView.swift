@@ -9,7 +9,7 @@ struct ImportCardView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("导入第一段音频")
                         .font(.headline)
-                    Text("文件或文件夹 · AirDrop")
+                    Text("文件或文件夹 · 链接 · AirDrop")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }

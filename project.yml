@@ -34,6 +34,8 @@ targets:
             LSItemContentTypes:
               - public.audio
         LSSupportsOpeningDocumentsInPlace: false
+        UIBackgroundModes:
+          - audio
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait

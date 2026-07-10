@@ -7,6 +7,7 @@ import SwiftUI
 final class LibraryStore {
     private let persistence: any LibraryPersisting
     private let importer: any AudioImporting
+    @ObservationIgnored private var itemDeletionHandler: ((UUID) -> Void)?
 
     private(set) var items: [AudioItem] = []
     private(set) var groups: [AudioGroup] = []
@@ -26,6 +27,10 @@ final class LibraryStore {
     }
 
     var scopeName: String {
+        name(for: scope)
+    }
+
+    func name(for scope: PlaybackScope) -> String {
         switch scope {
         case .master:
             "默认列表"
@@ -45,6 +50,10 @@ final class LibraryStore {
             throw LibraryStoreError.groupNotFound
         }
         scope = newScope
+    }
+
+    func setItemDeletionHandler(_ handler: @escaping (UUID) -> Void) {
+        itemDeletionHandler = handler
     }
 
     func items(in scope: PlaybackScope) -> [AudioItem] {
@@ -318,8 +327,15 @@ final class LibraryStore {
         try saveAndReload()
     }
 
+    func setPalette(_ palette: AppPalette?, for item: AudioItem) throws {
+        try ensureItemExists(item)
+        item.paletteKey = palette?.rawValue
+        try saveAndReload()
+    }
+
     func deleteItem(_ item: AudioItem) async throws {
         try ensureItemExists(item)
+        let deletedItemID = item.id
         let stagedDeletion: StagedAudioDeletion?
         if let localCopyURL = item.localCopyURL {
             stagedDeletion = try await importer.stageImportedAudioForDeletion(at: localCopyURL)
@@ -327,8 +343,8 @@ final class LibraryStore {
             stagedDeletion = nil
         }
 
-        persistence.delete(item)
         do {
+            try persistence.delete(item)
             try saveAndReload()
         } catch let persistenceError {
             if let stagedDeletion {
@@ -342,6 +358,8 @@ final class LibraryStore {
             }
             throw persistenceError
         }
+
+        itemDeletionHandler?(deletedItemID)
 
         if let stagedDeletion {
             do {

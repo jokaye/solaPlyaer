@@ -9,7 +9,7 @@ protocol LibraryPersisting {
     func insert(_ group: AudioGroup)
     func insert(_ membership: Membership)
 
-    func delete(_ item: AudioItem)
+    func delete(_ item: AudioItem) throws
     func delete(_ group: AudioGroup)
     func delete(_ membership: Membership)
 

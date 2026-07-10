@@ -1,7 +1,7 @@
 import SwiftData
 
 @MainActor
-final class PersistenceService: LibraryPersisting {
+final class PersistenceService: LibraryPersisting, MarkerPersisting {
     private let modelContext: ModelContext
 
     init(modelContext: ModelContext) {
@@ -36,7 +36,10 @@ final class PersistenceService: LibraryPersisting {
         modelContext.insert(membership)
     }
 
-    func delete(_ item: AudioItem) {
+    func delete(_ item: AudioItem) throws {
+        for marker in try fetchMarkers(ownerID: item.id) {
+            modelContext.delete(marker)
+        }
         modelContext.delete(item)
     }
 
@@ -54,5 +57,36 @@ final class PersistenceService: LibraryPersisting {
 
     func rollback() {
         modelContext.rollback()
+    }
+
+    func containsAudioItem(id: UUID) throws -> Bool {
+        let requestedID = id
+        var descriptor = FetchDescriptor<AudioItem>(
+            predicate: #Predicate { item in
+                item.id == requestedID
+            }
+        )
+        descriptor.fetchLimit = 1
+        return try modelContext.fetchCount(descriptor) > 0
+    }
+
+    func fetchMarkers(ownerID: UUID) throws -> [Marker] {
+        let requestedOwnerID = ownerID
+        return try modelContext.fetch(
+            FetchDescriptor<Marker>(
+                predicate: #Predicate { marker in
+                    marker.ownerID == requestedOwnerID
+                },
+                sortBy: [SortDescriptor(\Marker.time), SortDescriptor(\Marker.createdAt)]
+            )
+        )
+    }
+
+    func insert(_ marker: Marker) {
+        modelContext.insert(marker)
+    }
+
+    func delete(_ marker: Marker) {
+        modelContext.delete(marker)
     }
 }

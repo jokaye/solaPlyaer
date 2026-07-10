@@ -3,8 +3,10 @@ import UniformTypeIdentifiers
 
 struct LibraryView: View {
     @Bindable var store: LibraryStore
+    let onPlay: (AudioItem, PlaybackScope) -> Void
 
     @State private var isShowingImporter = false
+    @State private var isShowingLinkImporter = false
     @State private var isCreatingGroup = false
     @State private var isManagingGroups = false
     @State private var groupPickerRequest: GroupPickerRequest?
@@ -13,6 +15,22 @@ struct LibraryView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var presentedError: PresentedError?
     @State private var selectedItemIDs: Set<UUID> = []
+
+    private func setPalette(_ palette: AppPalette?, for item: AudioItem) {
+        do {
+            try store.setPalette(palette, for: item)
+        } catch {
+            present(error)
+        }
+    }
+
+    private func importLink(_ url: URL) async throws {
+        try await store.importFiles([url])
+    }
+
+    private func showLinkImporter() {
+        isShowingLinkImporter = true
+    }
 
     var body: some View {
         List(selection: $selectedItemIDs) {
@@ -53,7 +71,10 @@ struct LibraryView: View {
                             item: item,
                             membershipCount: store.membershipCount(for: item),
                             canRemoveFromCurrentGroup: store.scope != .master,
+                            selectedPalette: item.paletteKey.flatMap(AppPalette.init(rawValue:)),
+                            onPlay: { onPlay(item, store.scope) },
                             onChooseGroups: { showGroupPicker(for: item) },
+                            onSetPalette: { setPalette($0, for: item) },
                             onRemoveFromCurrentGroup: { removeFromCurrentGroup(item) },
                             onRename: { showRename(for: item) },
                             onDelete: { confirmDelete(item) }
@@ -76,6 +97,8 @@ struct LibraryView: View {
                     .disabled(store.isImporting)
 
                 Menu("更多", systemImage: "ellipsis.circle") {
+                    NavigationLink("设置", systemImage: "gearshape", value: RootRoute.settings)
+                    Button("从链接导入", systemImage: "link", action: showLinkImporter)
                     Button("管理分组", systemImage: "rectangle.3.group", action: showManageGroups)
                         .disabled(store.groups.isEmpty)
                     NavigationLink("关于与诊断", systemImage: "info.circle", value: RootRoute.about)
@@ -96,6 +119,9 @@ struct LibraryView: View {
             allowsMultipleSelection: true,
             onCompletion: handleImportResult
         )
+        .sheet(isPresented: $isShowingLinkImporter) {
+            LinkImportSheet(onImport: importLink)
+        }
         .onOpenURL(perform: importOpenedURL)
         .sheet(isPresented: $isCreatingGroup) {
             NameEditorSheet(title: "新建分组", initialName: "") { name in

@@ -15,7 +15,7 @@ struct AboutView: View {
 
             Section("运行环境") {
                 LabeledContent("最低系统", value: "iOS 17.0")
-                LabeledContent("数据状态", value: "M0 · 工程脚手架")
+                LabeledContent("数据状态", value: "M1–M6 核心功能已接入")
             }
         }
         .navigationTitle("关于与诊断")

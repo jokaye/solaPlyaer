@@ -5,10 +5,15 @@ import UniformTypeIdentifiers
 actor ImportService: AudioImporting {
     private let fileManager: FileManager
     private let destinationDirectory: URL
+    private let remoteDownloader: any RemoteAudioDownloading
 
-    init(destinationDirectory: URL? = nil) throws {
+    init(
+        destinationDirectory: URL? = nil,
+        remoteDownloader: any RemoteAudioDownloading = URLSession.shared
+    ) throws {
         let fileManager = FileManager()
         self.fileManager = fileManager
+        self.remoteDownloader = remoteDownloader
 
         if let destinationDirectory {
             self.destinationDirectory = destinationDirectory
@@ -24,6 +29,10 @@ actor ImportService: AudioImporting {
     }
 
     func importAudio(from sourceURL: URL) async throws -> [ImportedAudio] {
+        if sourceURL.isFileURL == false {
+            return try await importRemoteAudio(from: sourceURL)
+        }
+
         try fileManager.createDirectory(
             at: destinationDirectory,
             withIntermediateDirectories: true
@@ -41,7 +50,13 @@ actor ImportService: AudioImporting {
 
         do {
             for sourceFile in sourceFiles {
-                importedFiles.append(try await importAudioFile(from: sourceFile))
+                importedFiles.append(
+                    try await importAudioFile(
+                        from: sourceFile,
+                        preferredFilename: nil,
+                        bookmarkSourceURL: sourceFile
+                    )
+                )
             }
             return importedFiles
         } catch let importError {
@@ -194,23 +209,84 @@ actor ImportService: AudioImporting {
         try fileManager.removeItem(at: directoryURL)
     }
 
-    private func importAudioFile(from sourceURL: URL) async throws -> ImportedAudio {
-        let title = sourceURL.deletingPathExtension().lastPathComponent
+    private func importRemoteAudio(from sourceURL: URL) async throws -> [ImportedAudio] {
+        guard let scheme = sourceURL.scheme?.lowercased(),
+              scheme == "http" || scheme == "https" else {
+            throw RemoteAudioImportError.invalidURL(sourceURL.absoluteString)
+        }
+
+        try fileManager.createDirectory(
+            at: destinationDirectory,
+            withIntermediateDirectories: true
+        )
+
+        let (temporaryURL, response) = try await remoteDownloader.downloadAudio(from: sourceURL)
+        try Task.checkCancellation()
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw RemoteAudioImportError.invalidResponse
+        }
+        guard (200..<300).contains(httpResponse.statusCode) else {
+            throw RemoteAudioImportError.httpStatus(httpResponse.statusCode)
+        }
+
+        let filename = try remoteFilename(sourceURL: sourceURL, response: response)
+        return [
+            try await importAudioFile(
+                from: temporaryURL,
+                preferredFilename: filename,
+                bookmarkSourceURL: nil
+            ),
+        ]
+    }
+
+    private func remoteFilename(sourceURL: URL, response: URLResponse) throws -> String {
+        let candidates = [response.suggestedFilename, sourceURL.lastPathComponent]
+            .compactMap { $0 }
+
+        for candidate in candidates {
+            let sanitized = URL(fileURLWithPath: candidate).lastPathComponent
+            let fileExtension = URL(fileURLWithPath: sanitized).pathExtension
+            if let type = UTType(filenameExtension: fileExtension), type.conforms(to: .audio) {
+                return sanitized
+            }
+        }
+
+        if let mimeType = response.mimeType,
+           let type = UTType(mimeType: mimeType),
+           type.conforms(to: .audio),
+           let fileExtension = type.preferredFilenameExtension {
+            let baseName = candidates
+                .map { URL(fileURLWithPath: $0).deletingPathExtension().lastPathComponent }
+                .first(where: { $0.isEmpty == false }) ?? "remote-audio"
+            return "\(baseName).\(fileExtension)"
+        }
+
+        throw RemoteAudioImportError.unsupportedContentType(response.mimeType)
+    }
+
+    private func importAudioFile(
+        from sourceURL: URL,
+        preferredFilename: String?,
+        bookmarkSourceURL: URL?
+    ) async throws -> ImportedAudio {
+        let filenameURL = URL(fileURLWithPath: preferredFilename ?? sourceURL.lastPathComponent)
+        let title = filenameURL.deletingPathExtension().lastPathComponent
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !title.isEmpty else {
             throw AudioImportError.emptyTitle
         }
 
-        let bookmark = try sourceURL.bookmarkData(
-            options: .minimalBookmark,
-            includingResourceValuesForKeys: nil,
-            relativeTo: nil
-        )
-        let destinationURL = uniqueDestination(for: sourceURL)
+        let destinationURL = uniqueDestination(fileExtension: filenameURL.pathExtension)
 
         try fileManager.copyItem(at: sourceURL, to: destinationURL)
 
         do {
+            let bookmarkURL = bookmarkSourceURL ?? destinationURL
+            let bookmark = try bookmarkURL.bookmarkData(
+                options: .minimalBookmark,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
             let duration = try await AVURLAsset(url: destinationURL).load(.duration).seconds
             guard duration.isFinite, duration > 0 else {
                 throw AudioImportError.invalidDuration
@@ -282,8 +358,7 @@ actor ImportService: AudioImporting {
         return resourceType?.conforms(to: .audio) == true || extensionType?.conforms(to: .audio) == true
     }
 
-    private func uniqueDestination(for sourceURL: URL) -> URL {
-        let fileExtension = sourceURL.pathExtension
+    private func uniqueDestination(fileExtension: String) -> URL {
         let filename = fileExtension.isEmpty
             ? UUID().uuidString
             : "\(UUID().uuidString).\(fileExtension)"
