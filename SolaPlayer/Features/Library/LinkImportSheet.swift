@@ -12,12 +12,14 @@ struct LinkImportSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("音频链接") {
+                Section {
                     TextField("https://example.com/audio.mp3", text: $link)
                         .textInputAutocapitalization(.never)
                         .keyboardType(.URL)
                         .autocorrectionDisabled()
                         .disabled(pendingURL != nil)
+                } header: {
+                    Text("音频链接")
                 } footer: {
                     Text("支持服务器直接返回的 HTTP/HTTPS 音频文件。")
                 }

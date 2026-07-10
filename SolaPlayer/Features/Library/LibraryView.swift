@@ -32,7 +32,7 @@ struct LibraryView: View {
         isShowingLinkImporter = true
     }
 
-    var body: some View {
+    private var libraryList: some View {
         List(selection: $selectedItemIDs) {
             if store.isImporting {
                 ProgressView("正在导入音频…")
@@ -113,6 +113,10 @@ struct LibraryView: View {
                 }
             }
         }
+    }
+
+    private var librarySheets: some View {
+        libraryList
         .fileImporter(
             isPresented: $isShowingImporter,
             allowedContentTypes: [.audio, .folder],
@@ -152,6 +156,10 @@ struct LibraryView: View {
         .alert(item: $presentedError) { error in
             Alert(title: Text("操作失败"), message: Text(error.message))
         }
+    }
+
+    var body: some View {
+        librarySheets
         .onChange(of: store.scope) { _, _ in
             selectedItemIDs.removeAll()
         }
@@ -243,7 +251,7 @@ struct LibraryView: View {
         }
 
         do {
-            withAnimation {
+            try withAnimation {
                 try store.remove(item, from: group)
             }
         } catch {
@@ -253,7 +261,7 @@ struct LibraryView: View {
 
     private func undoRemoval() {
         do {
-            withAnimation {
+            try withAnimation {
                 try store.undoPendingRemoval()
             }
         } catch {
