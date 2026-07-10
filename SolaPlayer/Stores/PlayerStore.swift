@@ -340,6 +340,7 @@ final class PlayerStore {
 
     private func resetEmptyQueue() {
         engine.stop()
+        queue.removeAll()
         currentIndex = 0
         currentTime = 0
         duration = 0
