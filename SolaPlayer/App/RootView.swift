@@ -14,10 +14,10 @@ struct RootView: View {
 
                     VStack(spacing: AppSpacing.small) {
                         Text("Sola Player")
-                            .font(AppTypography.libraryTitle)
+                            .appFont(AppTypography.libraryTitle)
 
                         Text("让声音像天气一样流动")
-                            .font(AppTypography.secondary)
+                            .appFont(AppTypography.secondary)
                             .foregroundStyle(.secondary)
                     }
 
@@ -31,7 +31,7 @@ struct RootView: View {
                 }
                 .padding(AppSpacing.content)
             }
-            .foregroundStyle(.white)
+            .foregroundStyle(AppColor.ink)
             .navigationTitle("音库")
             .navigationBarTitleDisplayMode(.inline)
         }

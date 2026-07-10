@@ -10,6 +10,7 @@
 		20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6034A78883513C490A17ED /* AboutView.swift */; };
 		2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */; };
 		408D324870F5A712233820C1 /* AppMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4962B4FBD8550BE80F694E /* AppMaterial.swift */; };
+		41E4E138589F05AF295813D8 /* AppGradientColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADF57A04C70790B84922BC5 /* AppGradientColors.swift */; };
 		47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C337ED7E0CD0FF17857391 /* BuildInfo.swift */; };
 		49337E3572746CBA09AE232D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E68759516AC6B23889CFAFD /* RootView.swift */; };
 		6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C95532889AEE624311C1AD /* AppSpacing.swift */; };
@@ -18,16 +19,21 @@
 		9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840B3C14FF6253CA3EA07E96 /* AppRadius.swift */; };
 		B1B691A348F3C9B1125CB065 /* AppHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */; };
 		B256B625EAEEE9DAF42728B5 /* AppPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA6D72D40DC0933F6D17656 /* AppPalette.swift */; };
+		C3F6B0D694F318B967EF298B /* AppFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */; };
 		D541CC54D0D423F20F4E8940 /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B6CA558F695C9DF64AA359 /* AppColor.swift */; };
+		FA063DC269FCBC3DB7CB8B43 /* AppFontToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0F6A6AF33240AF28E8988 /* AppFontToken.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1E37E8025A2B5CC80AC6DA5A /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		1F1301D09663ABFF4C0EEB5D /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHaptic.swift; sourceTree = "<group>"; };
 		4E68759516AC6B23889CFAFD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		519B0A879CE1977149598E6F /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		51C337ED7E0CD0FF17857391 /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
+		59C0F6A6AF33240AF28E8988 /* AppFontToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontToken.swift; sourceTree = "<group>"; };
 		77BAFA78098510BA13C95A8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7ADF57A04C70790B84922BC5 /* AppGradientColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGradientColors.swift; sourceTree = "<group>"; };
 		840B3C14FF6253CA3EA07E96 /* AppRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRadius.swift; sourceTree = "<group>"; };
 		89B6CA558F695C9DF64AA359 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
 		89C95532889AEE624311C1AD /* AppSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpacing.swift; sourceTree = "<group>"; };
@@ -41,6 +47,7 @@
 		D2CBBE36A0D47DAF398B9115 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerApp.swift; sourceTree = "<group>"; };
 		E9ECA28E4FC208AE7190DD1E /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -86,10 +93,21 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		4C53264DC9A927857F5C33F2 /* Localizable */ = {
+			isa = PBXGroup;
+			children = (
+				1F1301D09663ABFF4C0EEB5D /* .gitkeep */,
+			);
+			path = Localizable;
+			sourceTree = "<group>";
+		};
 		6BFD143606D1C1815C2304C0 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
 				89B6CA558F695C9DF64AA359 /* AppColor.swift */,
+				EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */,
+				59C0F6A6AF33240AF28E8988 /* AppFontToken.swift */,
+				7ADF57A04C70790B84922BC5 /* AppGradientColors.swift */,
 				4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */,
 				AA4962B4FBD8550BE80F694E /* AppMaterial.swift */,
 				AEA6D72D40DC0933F6D17656 /* AppPalette.swift */,
@@ -119,6 +137,7 @@
 		B00E1FED39F69F9BDE829AC9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4C53264DC9A927857F5C33F2 /* Localizable */,
 				77BAFA78098510BA13C95A8B /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -276,6 +295,9 @@
 			files = (
 				20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */,
 				D541CC54D0D423F20F4E8940 /* AppColor.swift in Sources */,
+				C3F6B0D694F318B967EF298B /* AppFontModifier.swift in Sources */,
+				FA063DC269FCBC3DB7CB8B43 /* AppFontToken.swift in Sources */,
+				41E4E138589F05AF295813D8 /* AppGradientColors.swift in Sources */,
 				B1B691A348F3C9B1125CB065 /* AppHaptic.swift in Sources */,
 				408D324870F5A712233820C1 /* AppMaterial.swift in Sources */,
 				B256B625EAEEE9DAF42728B5 /* AppPalette.swift in Sources */,
@@ -425,7 +447,7 @@
 		CE2BD94FE1678A5EE163E4CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Sola Player";
@@ -444,7 +466,7 @@
 		E5D8320B55585243AF7D0407 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Sola Player";

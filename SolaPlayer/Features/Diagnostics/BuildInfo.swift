@@ -16,8 +16,7 @@ enum BuildInfo {
     private static func requiredBundleValue(for key: String) -> String {
         guard let value = Bundle.main.object(forInfoDictionaryKey: key) as? String,
               !value.isEmpty else {
-            assertionFailure("Missing required bundle value: \(key)")
-            return "missing"
+            preconditionFailure("Missing required bundle value: \(key)")
         }
         return value
     }

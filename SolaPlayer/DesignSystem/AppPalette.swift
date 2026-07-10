@@ -21,29 +21,53 @@ enum AppPalette: String, CaseIterable, Identifiable {
         }
     }
 
-    var colors: [Color] {
+    var colors: AppGradientColors {
         switch self {
         case .clearSky:
-            [Color(red: 0.29, green: 0.66, blue: 1.0), Color(red: 0.56, green: 0.79, blue: 1.0), Color(red: 0.86, green: 0.93, blue: 1.0)]
+            AppGradientColors(
+                top: Color(red: 74 / 255, green: 168 / 255, blue: 255 / 255),
+                middle: Color(red: 143 / 255, green: 201 / 255, blue: 255 / 255),
+                bottom: Color(red: 219 / 255, green: 238 / 255, blue: 255 / 255)
+            )
         case .lake:
-            [Color(red: 0.09, green: 0.70, blue: 0.78), Color(red: 0.50, green: 0.88, blue: 0.90), Color(red: 0.88, green: 0.97, blue: 0.97)]
+            AppGradientColors(
+                top: Color(red: 23 / 255, green: 179 / 255, blue: 198 / 255),
+                middle: Color(red: 127 / 255, green: 224 / 255, blue: 230 / 255),
+                bottom: Color(red: 224 / 255, green: 247 / 255, blue: 247 / 255)
+            )
         case .mint:
-            [Color(red: 0.18, green: 0.79, blue: 0.54), Color(red: 0.56, green: 0.90, blue: 0.74), Color(red: 0.89, green: 0.97, blue: 0.93)]
+            AppGradientColors(
+                top: Color(red: 46 / 255, green: 201 / 255, blue: 138 / 255),
+                middle: Color(red: 143 / 255, green: 230 / 255, blue: 189 / 255),
+                bottom: Color(red: 226 / 255, green: 248 / 255, blue: 236 / 255)
+            )
         case .ocean:
-            [Color(red: 0.06, green: 0.56, blue: 0.84), Color(red: 0.25, green: 0.82, blue: 0.75), Color(red: 0.77, green: 0.95, blue: 0.91)]
+            AppGradientColors(
+                top: Color(red: 15 / 255, green: 143 / 255, blue: 214 / 255),
+                middle: Color(red: 63 / 255, green: 208 / 255, blue: 192 / 255),
+                bottom: Color(red: 196 / 255, green: 242 / 255, blue: 232 / 255)
+            )
         case .azure:
-            [Color(red: 0.35, green: 0.69, blue: 1.0), Color(red: 0.39, green: 0.84, blue: 0.76), Color(red: 0.80, green: 0.96, blue: 0.89)]
+            AppGradientColors(
+                top: Color(red: 90 / 255, green: 176 / 255, blue: 255 / 255),
+                middle: Color(red: 99 / 255, green: 214 / 255, blue: 194 / 255),
+                bottom: Color(red: 205 / 255, green: 246 / 255, blue: 228 / 255)
+            )
         case .aqua:
-            [Color(red: 0.0, green: 0.74, blue: 0.83), Color(red: 0.37, green: 0.88, blue: 0.72), Color(red: 0.85, green: 0.97, blue: 0.94)]
+            AppGradientColors(
+                top: Color(red: 0 / 255, green: 188 / 255, blue: 212 / 255),
+                middle: Color(red: 95 / 255, green: 224 / 255, blue: 184 / 255),
+                bottom: Color(red: 218 / 255, green: 247 / 255, blue: 239 / 255)
+            )
         }
     }
 
     var gradient: LinearGradient {
         LinearGradient(
             stops: [
-                .init(color: colors[0], location: 0),
-                .init(color: colors[1], location: 0.52),
-                .init(color: colors[2], location: 1),
+                .init(color: colors.top, location: 0),
+                .init(color: colors.middle, location: 0.52),
+                .init(color: colors.bottom, location: 1),
             ],
             startPoint: .top,
             endPoint: .bottom
