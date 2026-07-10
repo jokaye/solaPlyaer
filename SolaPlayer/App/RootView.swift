@@ -1,39 +1,17 @@
 import SwiftUI
 
 struct RootView: View {
+    let store: LibraryStore
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: AppSpacing.large) {
-                Image(systemName: "waveform")
-                    .font(.system(size: 52, weight: .ultraLight))
-                    .accessibilityHidden(true)
-
-                VStack(spacing: AppSpacing.small) {
-                    Text("Sola Player")
-                        .appFont(AppTypography.libraryTitle)
-
-                    Text("让声音像天气一样流动")
-                        .appFont(AppTypography.secondary)
-                        .foregroundStyle(.secondary)
+            LibraryView(store: store)
+                .navigationDestination(for: RootRoute.self) { route in
+                    switch route {
+                    case .about:
+                        AboutView()
+                    }
                 }
-
-                NavigationLink("关于与诊断") {
-                    AboutView()
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(AppColor.ink)
-                .foregroundStyle(.white)
-                .controlSize(.large)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(AppSpacing.content)
-            .foregroundStyle(.primary)
-            .navigationTitle("音库")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
-}
-
-#Preview {
-    RootView()
 }
