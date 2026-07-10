@@ -1,0 +1,487 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6034A78883513C490A17ED /* AboutView.swift */; };
+		2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */; };
+		408D324870F5A712233820C1 /* AppMaterial.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4962B4FBD8550BE80F694E /* AppMaterial.swift */; };
+		47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C337ED7E0CD0FF17857391 /* BuildInfo.swift */; };
+		49337E3572746CBA09AE232D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E68759516AC6B23889CFAFD /* RootView.swift */; };
+		6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C95532889AEE624311C1AD /* AppSpacing.swift */; };
+		70A2EC3CA0A9F964A959DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77BAFA78098510BA13C95A8B /* Assets.xcassets */; };
+		7877A62614C8273C301442F3 /* AppTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735450BDAEFEEBB74850AF7 /* AppTypography.swift */; };
+		9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840B3C14FF6253CA3EA07E96 /* AppRadius.swift */; };
+		B1B691A348F3C9B1125CB065 /* AppHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */; };
+		B256B625EAEEE9DAF42728B5 /* AppPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA6D72D40DC0933F6D17656 /* AppPalette.swift */; };
+		D541CC54D0D423F20F4E8940 /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B6CA558F695C9DF64AA359 /* AppColor.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1E37E8025A2B5CC80AC6DA5A /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHaptic.swift; sourceTree = "<group>"; };
+		4E68759516AC6B23889CFAFD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		519B0A879CE1977149598E6F /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		51C337ED7E0CD0FF17857391 /* BuildInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInfo.swift; sourceTree = "<group>"; };
+		77BAFA78098510BA13C95A8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		840B3C14FF6253CA3EA07E96 /* AppRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRadius.swift; sourceTree = "<group>"; };
+		89B6CA558F695C9DF64AA359 /* AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
+		89C95532889AEE624311C1AD /* AppSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpacing.swift; sourceTree = "<group>"; };
+		8E34634EAEDE15C8BF3E50DB /* SolaPlayer.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SolaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8291EF3AC65B4099EC6E4D5 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		AA4962B4FBD8550BE80F694E /* AppMaterial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMaterial.swift; sourceTree = "<group>"; };
+		AAFCD4F646102069B9F7A291 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		AEA6D72D40DC0933F6D17656 /* AppPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPalette.swift; sourceTree = "<group>"; };
+		AF6034A78883513C490A17ED /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		C735450BDAEFEEBB74850AF7 /* AppTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTypography.swift; sourceTree = "<group>"; };
+		D2CBBE36A0D47DAF398B9115 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+		DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerApp.swift; sourceTree = "<group>"; };
+		E9ECA28E4FC208AE7190DD1E /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0D8308C70E44B4DE09FBA67F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E9ECA28E4FC208AE7190DD1E /* .gitkeep */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		189D7EED05CA5B56EC8988B9 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				D2CBBE36A0D47DAF398B9115 /* .gitkeep */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		2AF32F6E67BA7D7C6CA5A8DF /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4E68759516AC6B23889CFAFD /* RootView.swift */,
+				DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		3511DF1262BE9D805516C5A7 /* Diagnostics */ = {
+			isa = PBXGroup;
+			children = (
+				AF6034A78883513C490A17ED /* AboutView.swift */,
+				51C337ED7E0CD0FF17857391 /* BuildInfo.swift */,
+			);
+			path = Diagnostics;
+			sourceTree = "<group>";
+		};
+		49AEF9C54647CAC857ADC55E /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				AAFCD4F646102069B9F7A291 /* .gitkeep */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		6BFD143606D1C1815C2304C0 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				89B6CA558F695C9DF64AA359 /* AppColor.swift */,
+				4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */,
+				AA4962B4FBD8550BE80F694E /* AppMaterial.swift */,
+				AEA6D72D40DC0933F6D17656 /* AppPalette.swift */,
+				840B3C14FF6253CA3EA07E96 /* AppRadius.swift */,
+				89C95532889AEE624311C1AD /* AppSpacing.swift */,
+				C735450BDAEFEEBB74850AF7 /* AppTypography.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		881996D886B63CD2400C292F = {
+			isa = PBXGroup;
+			children = (
+				DD6FBC89F698393176B6F472 /* SolaPlayer */,
+				FD269E08AB91148D58E17E5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9D66E4CAFFE5DE78F4773B12 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				1E37E8025A2B5CC80AC6DA5A /* .gitkeep */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		B00E1FED39F69F9BDE829AC9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				77BAFA78098510BA13C95A8B /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BD4D056D74E6EF1B8FB64082 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A8291EF3AC65B4099EC6E4D5 /* .gitkeep */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BDBF3F335D617C5A9C534BEF /* Markers */ = {
+			isa = PBXGroup;
+			children = (
+				519B0A879CE1977149598E6F /* .gitkeep */,
+			);
+			path = Markers;
+			sourceTree = "<group>";
+		};
+		D7B51BF2AE9DB4CF6C2312EC /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				3511DF1262BE9D805516C5A7 /* Diagnostics */,
+				189D7EED05CA5B56EC8988B9 /* Library */,
+				BDBF3F335D617C5A9C534BEF /* Markers */,
+				49AEF9C54647CAC857ADC55E /* Player */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		D915602274856F4783FAFE92 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0D8308C70E44B4DE09FBA67F /* Protocols */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DD6FBC89F698393176B6F472 /* SolaPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				2AF32F6E67BA7D7C6CA5A8DF /* App */,
+				6BFD143606D1C1815C2304C0 /* DesignSystem */,
+				D7B51BF2AE9DB4CF6C2312EC /* Features */,
+				BD4D056D74E6EF1B8FB64082 /* Models */,
+				B00E1FED39F69F9BDE829AC9 /* Resources */,
+				D915602274856F4783FAFE92 /* Services */,
+				9D66E4CAFFE5DE78F4773B12 /* Stores */,
+			);
+			path = SolaPlayer;
+			sourceTree = "<group>";
+		};
+		FD269E08AB91148D58E17E5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8E34634EAEDE15C8BF3E50DB /* SolaPlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6354AF1FC8B31ED2F6390737 /* SolaPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D67B55DD29E327293EE2F3CF /* Build configuration list for PBXNativeTarget "SolaPlayer" */;
+			buildPhases = (
+				8E0E072F25975FFD74648BF8 /* Sources */,
+				465961BEE04D0D10EEF67328 /* Resources */,
+				A16017BCF9DF2083F7490050 /* Embed build metadata */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SolaPlayer;
+			packageProductDependencies = (
+			);
+			productName = SolaPlayer;
+			productReference = 8E34634EAEDE15C8BF3E50DB /* SolaPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B02BD0F671E3B229384FF6C1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					6354AF1FC8B31ED2F6390737 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 4D32C62EB5A59B838501C027 /* Build configuration list for PBXProject "SolaPlayer" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 881996D886B63CD2400C292F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FD269E08AB91148D58E17E5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6354AF1FC8B31ED2F6390737 /* SolaPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		465961BEE04D0D10EEF67328 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70A2EC3CA0A9F964A959DF2E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A16017BCF9DF2083F7490050 /* Embed build metadata */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed build metadata";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/scripts/embed-build-metadata.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8E0E072F25975FFD74648BF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */,
+				D541CC54D0D423F20F4E8940 /* AppColor.swift in Sources */,
+				B1B691A348F3C9B1125CB065 /* AppHaptic.swift in Sources */,
+				408D324870F5A712233820C1 /* AppMaterial.swift in Sources */,
+				B256B625EAEEE9DAF42728B5 /* AppPalette.swift in Sources */,
+				9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */,
+				6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */,
+				7877A62614C8273C301442F3 /* AppTypography.swift in Sources */,
+				47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */,
+				49337E3572746CBA09AE232D /* RootView.swift in Sources */,
+				2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6B8B86B10A8D89DACBE01B92 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.solaplayer.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		97B5592B4F7A63D308FE708E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.solaplayer.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CE2BD94FE1678A5EE163E4CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sola Player";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = SolaPlayer;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E5D8320B55585243AF7D0407 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sola Player";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = SolaPlayer;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4D32C62EB5A59B838501C027 /* Build configuration list for PBXProject "SolaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B8B86B10A8D89DACBE01B92 /* Debug */,
+				97B5592B4F7A63D308FE708E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D67B55DD29E327293EE2F3CF /* Build configuration list for PBXNativeTarget "SolaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5D8320B55585243AF7D0407 /* Debug */,
+				CE2BD94FE1678A5EE163E4CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B02BD0F671E3B229384FF6C1 /* Project object */;
+}
