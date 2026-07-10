@@ -3,4 +3,3 @@ DerivedData/
 build/
 *.xcuserstate
 xcuserdata/
-SolaPlayer/Generated/BuildMetadata.generated.swift
