@@ -42,7 +42,7 @@ struct GroupPickerSheet: View {
                                 Spacer()
                                 if allItemsAreMembers(of: group) {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundStyle(AppColor.ink)
+                                        .foregroundStyle(groupPalette(for: group).colors.top)
                                         .accessibilityHidden(true)
                                 } else if anyItemIsMember(of: group) {
                                     Image(systemName: "minus.circle.fill")
@@ -55,6 +55,7 @@ struct GroupPickerSheet: View {
                                 }
                             }
                         }
+                        .buttonStyle(.plain)
                         .accessibilityValue(accessibilityValue(for: group))
                         .frame(minHeight: 48)
                     }

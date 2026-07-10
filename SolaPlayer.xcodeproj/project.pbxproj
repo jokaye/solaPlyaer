@@ -85,8 +85,10 @@
 		B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413C6D3C1B4F702ABD07422C /* SolaPlayerMigrationPlan.swift */; };
 		B77B9F6127588906B017C27E /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC9F9860DF94B597ACFC3A3 /* Membership.swift */; };
 		B979287A0C50B44C4CC68815 /* SolaPlayerSchemaV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352EACA83480B06A95ABEFA7 /* SolaPlayerSchemaV2.swift */; };
+		BB0D3C3CDA2D556745E6602E /* PlayerGlassButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */; };
 		C3F6B0D694F318B967EF298B /* AppFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */; };
 		C8FA62055381C5569E1CBD29 /* PlayerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A44EBF3BA179E7383811C6 /* PlayerStore.swift */; };
+		CECD91CC550916370295C80F /* PlayerActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */; };
 		CF8EEC73673BB049F68C45B5 /* RemoteAudioImportResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150C41556241C4AE24278C94 /* RemoteAudioImportResponseTests.swift */; };
 		D18FA4D6DA1A19EF70054FB9 /* MembershipRemoval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACDE5AB6BAC828D0495D9D9 /* MembershipRemoval.swift */; };
 		D33BB3D0302ED9998ED37620 /* UndoSnackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BD850E0C5903421026DEEE /* UndoSnackbar.swift */; };
@@ -139,6 +141,7 @@
 		35A44EBF3BA179E7383811C6 /* PlayerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStore.swift; sourceTree = "<group>"; };
 		36F5B0BE6F4CE81F8E80ECBA /* MarkerStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStoreError.swift; sourceTree = "<group>"; };
 		3BC9F9860DF94B597ACFC3A3 /* Membership.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Membership.swift; sourceTree = "<group>"; };
+		3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGlassButtonStyle.swift; sourceTree = "<group>"; };
 		413C6D3C1B4F702ABD07422C /* SolaPlayerMigrationPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerMigrationPlan.swift; sourceTree = "<group>"; };
 		451413C08F347C20D3522FFD /* ImportCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCardView.swift; sourceTree = "<group>"; };
 		45A16B959E4EFB8D2D52B99E /* RootRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootRoute.swift; sourceTree = "<group>"; };
@@ -200,6 +203,7 @@
 		AB7EF9CF55F42E18D3A5089A /* GroupChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChipsView.swift; sourceTree = "<group>"; };
 		AEA6D72D40DC0933F6D17656 /* AppPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPalette.swift; sourceTree = "<group>"; };
 		AF6034A78883513C490A17ED /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerActionButtons.swift; sourceTree = "<group>"; };
 		B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		B42B19529254AE6ED383B5CC /* NameEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditorSheet.swift; sourceTree = "<group>"; };
 		B587481DAFA171EC600C9C57 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
@@ -297,6 +301,8 @@
 				AAFCD4F646102069B9F7A291 /* .gitkeep */,
 				D59C756AB57F33176ECDF1EE /* GradientBackground.swift */,
 				7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */,
+				B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */,
+				3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */,
 				CC76E9983FB7B298AFDD64E1 /* PlayerView.swift */,
 				FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */,
 				C424562CC7026D0C00CE2338 /* TransportControls.swift */,
@@ -688,6 +694,8 @@
 				F108DB3B3D86082DD83E94B2 /* PlaybackQueueItem.swift in Sources */,
 				721452DD41A62C733A1552DB /* PlaybackQueueSheet.swift in Sources */,
 				ACBC380FA3BE31FD57D9FA5D /* PlaybackScope.swift in Sources */,
+				CECD91CC550916370295C80F /* PlayerActionButtons.swift in Sources */,
+				BB0D3C3CDA2D556745E6602E /* PlayerGlassButtonStyle.swift in Sources */,
 				C8FA62055381C5569E1CBD29 /* PlayerStore.swift in Sources */,
 				54FF8D03D4C175E3A8AA92F9 /* PlayerStoreError.swift in Sources */,
 				D6324A4827923B9D71917A5A /* PlayerView.swift in Sources */,

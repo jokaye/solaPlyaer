@@ -125,7 +125,7 @@ struct LibraryView: View {
                     Spacer()
 
                     if store.scope != .master, store.visibleItems.isEmpty == false {
-                        EditButton()
+                        Button(editMode.isEditing ? "完成" : "编辑", action: toggleEditMode)
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(AppPalette.lake.colors.top)
                     }
@@ -359,6 +359,12 @@ struct LibraryView: View {
             try playerStore.togglePlayback()
         } catch {
             present(error)
+        }
+    }
+
+    private func toggleEditMode() {
+        withAnimation(.easeInOut(duration: 0.22)) {
+            editMode = editMode.isEditing ? .inactive : .active
         }
     }
 

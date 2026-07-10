@@ -94,25 +94,13 @@ struct PlayerView: View {
                 }
                 .frame(height: 104)
 
-                HStack {
-                    Button("分组 \(membershipCount)", systemImage: "rectangle.3.group", action: showGroupPicker)
-                        .disabled(currentLibraryItem == nil)
-                        .frame(minHeight: 44)
-
-                    Spacer()
-
-                    Button(
-                        "标记此刻 \(markerStore.markers.count)",
-                        systemImage: "bookmark",
-                        action: addMarker
-                    )
-                    .disabled(store.currentItem == nil || store.duration <= 0)
-                    .frame(minHeight: 44)
-                }
-                .buttonStyle(.bordered)
-                .buttonBorderShape(.capsule)
-                .tint(.white)
-                .frame(minHeight: 44)
+                PlayerActionButtons(
+                    membershipCount: membershipCount,
+                    canGroup: currentLibraryItem != nil,
+                    canMark: store.currentItem != nil && store.duration > 0,
+                    onGroup: showGroupPicker,
+                    onMark: addMarker
+                )
 
                 TransportControls(
                     isPlaying: store.isPlaying,
@@ -128,6 +116,7 @@ struct PlayerView: View {
             .padding(.bottom, AppSpacing.controls)
         }
         .foregroundStyle(.white)
+        .tint(.white)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)

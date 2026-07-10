@@ -30,7 +30,7 @@ struct TrackRowView: View {
                     .shadow(color: Color.red.opacity(0.28), radius: 5, y: 2)
             }
 
-            Button(action: onPlay) {
+            Button(action: handlePlay) {
                 HStack(spacing: 12) {
                     (selectedPalette ?? .clearSky).gradient
                         .frame(width: 52, height: 52)
@@ -56,7 +56,6 @@ struct TrackRowView: View {
                 .contentShape(.rect)
             }
             .buttonStyle(.plain)
-            .disabled(isEditing)
             .accessibilityHint("进入播放页")
 
             if isEditing, canRemoveFromCurrentGroup {
@@ -67,6 +66,12 @@ struct TrackRowView: View {
                         .buttonBorderShape(.capsule)
                         .tint(Color(red: 1, green: 0.37, blue: 0.48))
                         .transition(.move(edge: .trailing).combined(with: .opacity))
+                } else {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                        .frame(width: 32, height: 44)
+                        .accessibilityLabel("拖动调整顺序")
                 }
             } else {
                 Menu("曲目操作", systemImage: "ellipsis") {
@@ -158,5 +163,12 @@ struct TrackRowView: View {
     private func confirmRemoval() {
         isConfirmingRemoval = false
         onRemoveFromCurrentGroup()
+    }
+
+    private func handlePlay() {
+        guard isEditing == false else {
+            return
+        }
+        onPlay()
     }
 }
