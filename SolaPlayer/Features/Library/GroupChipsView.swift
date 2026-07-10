@@ -51,10 +51,13 @@ struct GroupChipsView: View {
 
                 Button("新建分组", systemImage: "plus", action: onCreateGroup)
                     .buttonStyle(.bordered)
+                    .buttonBorderShape(.capsule)
+                    .tint(AppPalette.lake.colors.top)
 
                 if store.groups.isEmpty == false {
-                    Button("调整分组顺序", systemImage: "arrow.up.arrow.down", action: onManageGroups)
+                    Button("调整顺序", systemImage: "arrow.up.arrow.down", action: onManageGroups)
                         .buttonStyle(.bordered)
+                        .buttonBorderShape(.capsule)
                 }
             }
             .padding(.horizontal, AppSpacing.content)

@@ -32,6 +32,18 @@ struct PlayerView: View {
                     Text(store.currentItem?.title ?? "正在载入")
                         .appFont(AppTypography.playerTitle)
                         .lineLimit(2)
+
+                    HStack(spacing: 8) {
+                        Text("本地音频")
+                            .appFont(AppTypography.secondary)
+                            .foregroundStyle(.white.opacity(0.75))
+
+                        Text(palette.label)
+                            .appFont(AppTypography.metadata)
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 4)
+                            .background(.white.opacity(AppMaterial.controlFillOpacity), in: .capsule)
+                    }
                 }
                 .shadow(color: .black.opacity(0.08), radius: 12, y: 2)
 
@@ -46,6 +58,18 @@ struct PlayerView: View {
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .transition(.opacity)
                 }
+
+                HStack {
+                    Text("0:00")
+                    Spacer()
+                    Text((store.duration / 2).durationText)
+                    Spacer()
+                    Text(store.duration.durationText)
+                }
+                .appFont(AppTypography.metadata)
+                .foregroundStyle(.white.opacity(0.65))
+                .padding(.horizontal, 4)
+                .padding(.bottom, 2)
 
                 ZStack {
                     WaveformScrubber(
@@ -68,7 +92,7 @@ struct PlayerView: View {
                             .background(.black.opacity(0.12), in: .capsule)
                     }
                 }
-                .frame(height: 112)
+                .frame(height: 104)
 
                 HStack {
                     Button("分组 \(membershipCount)", systemImage: "rectangle.3.group", action: showGroupPicker)
@@ -86,6 +110,7 @@ struct PlayerView: View {
                     .frame(minHeight: 44)
                 }
                 .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
                 .tint(.white)
                 .frame(minHeight: 44)
 
@@ -123,8 +148,12 @@ struct PlayerView: View {
                 .accessibilityHint("展开当前播放队列")
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button("标记列表", systemImage: "bookmark.fill", action: showMarkers)
-                    .disabled(store.currentItem == nil)
+                Menu("更多", systemImage: "ellipsis") {
+                    Button("标记列表", systemImage: "bookmark", action: showMarkers)
+                    Button("加入分组", systemImage: "rectangle.3.group", action: showGroupPicker)
+                        .disabled(currentLibraryItem == nil)
+                }
+                .disabled(store.currentItem == nil)
             }
         }
         .sheet(item: $itemForGrouping) { item in
@@ -175,15 +204,17 @@ struct PlayerView: View {
     }
 
     private func runPlayer() async {
-        do {
-            try store.start(
-                queue: queue,
-                initialItemID: initialItemID,
-                sourceName: sourceName
-            )
-        } catch {
-            presentedError = PresentedError(error)
-            return
+        if store.queue != queue || store.currentItem?.id != initialItemID || store.sourceName != sourceName {
+            do {
+                try store.start(
+                    queue: queue,
+                    initialItemID: initialItemID,
+                    sourceName: sourceName
+                )
+            } catch {
+                presentedError = PresentedError(error)
+                return
+            }
         }
 
         while Task.isCancelled == false {

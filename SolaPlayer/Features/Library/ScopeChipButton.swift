@@ -9,10 +9,7 @@ struct ScopeChipButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .accessibilityHidden(true)
-                } else if let accentColor {
+                if isSelected == false, let accentColor {
                     Circle()
                         .fill(accentColor)
                         .frame(width: 8, height: 8)
@@ -21,9 +18,12 @@ struct ScopeChipButton: View {
                 Text(title)
             }
         }
+        .font(.subheadline.weight(.medium))
         .buttonStyle(.borderedProminent)
-        .tint(isSelected ? AppColor.ink : Color.secondary.opacity(0.12))
+        .buttonBorderShape(.capsule)
+        .tint(isSelected ? AppColor.ink : AppColor.ink.opacity(0.06))
         .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .shadow(color: isSelected ? AppColor.ink.opacity(0.16) : .clear, radius: 8, y: 5)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

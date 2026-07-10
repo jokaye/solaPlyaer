@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct TrackRowView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let item: AudioItem
     let membershipCount: Int
+    let isCurrent: Bool
     let canRemoveFromCurrentGroup: Bool
     let selectedPalette: AppPalette?
     let onPlay: () -> Void
@@ -16,13 +19,12 @@ struct TrackRowView: View {
         HStack(spacing: 12) {
             Button(action: onPlay) {
                 HStack(spacing: 12) {
-                    AppPalette.clearSky.gradient
+                    (selectedPalette ?? .clearSky).gradient
                         .frame(width: 52, height: 52)
                         .clipShape(.rect(cornerRadius: AppRadius.thumbnail))
                         .overlay {
-                            Image(systemName: "waveform")
-                                .foregroundStyle(.white)
-                                .accessibilityHidden(true)
+                            MiniWaveformView(seed: item.id)
+                                .padding(8)
                         }
 
                     VStack(alignment: .leading, spacing: 4) {
@@ -79,7 +81,25 @@ struct TrackRowView: View {
             .labelStyle(.iconOnly)
             .frame(minWidth: 44, minHeight: 44)
         }
-        .frame(minHeight: 56)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 9)
+        .frame(minHeight: 70)
+        .background(cardColor, in: .rect(cornerRadius: 18))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(
+                    isCurrent ? AppPalette.mint.colors.top : Color.primary.opacity(0.05),
+                    lineWidth: isCurrent ? 1.5 : 1
+                )
+                .allowsHitTesting(false)
+        }
+        .shadow(
+            color: isCurrent
+                ? AppPalette.mint.colors.top.opacity(0.16)
+                : .black.opacity(colorScheme == .dark ? 0.16 : 0.055),
+            radius: isCurrent ? 16 : 10,
+            y: 4
+        )
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             if canRemoveFromCurrentGroup {
                 Button(
@@ -90,5 +110,9 @@ struct TrackRowView: View {
                 )
             }
         }
+    }
+
+    private var cardColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.08) : .white.opacity(0.94)
     }
 }
