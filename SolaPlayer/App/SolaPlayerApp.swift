@@ -10,14 +10,27 @@ struct SolaPlayerApp: App {
     @State private var markerStore: MarkerStore?
 
     init() {
+        let dependencies = Self.makeDependencies()
+        modelContainer = dependencies.modelContainer
+        initializationFailureMessage = dependencies.failureMessage
+        _libraryStore = State(initialValue: dependencies.libraryStore)
+        _playerStore = State(initialValue: dependencies.playerStore)
+        _markerStore = State(initialValue: dependencies.markerStore)
+    }
+
+    private static func makeDependencies() -> (
+        modelContainer: ModelContainer?,
+        failureMessage: String?,
+        libraryStore: LibraryStore?,
+        playerStore: PlayerStore?,
+        markerStore: MarkerStore?
+    ) {
         do {
             let modelContainer = try AppModelContainer.make()
             let persistence = PersistenceService(modelContext: modelContainer.mainContext)
             let importer = try ImportService()
             let waveformService = try WaveformService()
 
-            self.modelContainer = modelContainer
-            initializationFailureMessage = nil
             let libraryStore = try LibraryStore(
                 persistence: persistence,
                 importer: importer
@@ -32,15 +45,9 @@ struct SolaPlayerApp: App {
                 markerStore?.handleDeletedAudio(id: itemID)
             }
 
-            _libraryStore = State(initialValue: libraryStore)
-            _playerStore = State(initialValue: playerStore)
-            _markerStore = State(initialValue: markerStore)
+            return (modelContainer, nil, libraryStore, playerStore, markerStore)
         } catch {
-            modelContainer = nil
-            initializationFailureMessage = error.localizedDescription
-            _libraryStore = State(initialValue: nil)
-            _playerStore = State(initialValue: nil)
-            _markerStore = State(initialValue: nil)
+            return (nil, error.localizedDescription, nil, nil, nil)
         }
     }
 
