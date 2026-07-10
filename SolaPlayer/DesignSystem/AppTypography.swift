@@ -9,4 +9,5 @@ enum AppTypography {
     static let pill = AppFontToken(size: 12, weight: .semibold, relativeTo: .caption)
     static let flag = AppFontToken(size: 10, weight: .semibold, relativeTo: .caption2)
     static let libraryTitle = AppFontToken(size: 34, weight: .thin, relativeTo: .largeTitle)
+    static let libraryTrackTitle = AppFontToken(size: 15, weight: .medium, relativeTo: .headline)
 }

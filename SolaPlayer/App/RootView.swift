@@ -1,39 +1,36 @@
 import SwiftUI
 
 struct RootView: View {
+    let store: LibraryStore
+    let playerStore: PlayerStore
+    let markerStore: MarkerStore
+
+    @State private var path: [RootRoute] = []
+
     var body: some View {
-        NavigationStack {
-            VStack(spacing: AppSpacing.large) {
-                Image(systemName: "waveform")
-                    .font(.system(size: 52, weight: .ultraLight))
-                    .accessibilityHidden(true)
-
-                VStack(spacing: AppSpacing.small) {
-                    Text("Sola Player")
-                        .appFont(AppTypography.libraryTitle)
-
-                    Text("让声音像天气一样流动")
-                        .appFont(AppTypography.secondary)
-                        .foregroundStyle(.secondary)
+        NavigationStack(path: $path) {
+            LibraryView(store: store, onPlay: play)
+                .navigationDestination(for: RootRoute.self) { route in
+                    switch route {
+                    case .about:
+                        AboutView()
+                    case .settings:
+                        SettingsView()
+                    case let .player(scope, itemID):
+                        PlayerView(
+                            store: playerStore,
+                            libraryStore: store,
+                            markerStore: markerStore,
+                            queue: store.items(in: scope).map(PlaybackQueueItem.init),
+                            initialItemID: itemID,
+                            sourceName: store.name(for: scope)
+                        )
+                    }
                 }
-
-                NavigationLink("关于与诊断") {
-                    AboutView()
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(AppColor.ink)
-                .foregroundStyle(.white)
-                .controlSize(.large)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(AppSpacing.content)
-            .foregroundStyle(.primary)
-            .navigationTitle("音库")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
-}
 
-#Preview {
-    RootView()
+    private func play(_ item: AudioItem, in scope: PlaybackScope) {
+        path.append(.player(scope: scope, itemID: item.id))
+    }
 }
