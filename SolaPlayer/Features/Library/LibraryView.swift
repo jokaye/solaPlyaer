@@ -97,11 +97,15 @@ struct LibraryView: View {
                     .disabled(store.isImporting)
 
                 Menu("更多", systemImage: "ellipsis.circle") {
-                    NavigationLink("设置", systemImage: "gearshape", value: RootRoute.settings)
+                    NavigationLink(value: RootRoute.settings) {
+                        Label("设置", systemImage: "gearshape")
+                    }
                     Button("从链接导入", systemImage: "link", action: showLinkImporter)
                     Button("管理分组", systemImage: "rectangle.3.group", action: showManageGroups)
                         .disabled(store.groups.isEmpty)
-                    NavigationLink("关于与诊断", systemImage: "info.circle", value: RootRoute.about)
+                    NavigationLink(value: RootRoute.about) {
+                        Label("关于与诊断", systemImage: "info.circle")
+                    }
                 }
             }
 
@@ -251,7 +255,7 @@ struct LibraryView: View {
         }
 
         do {
-            try withAnimation {
+            _ = try withAnimation {
                 try store.remove(item, from: group)
             }
         } catch {
@@ -261,7 +265,7 @@ struct LibraryView: View {
 
     private func undoRemoval() {
         do {
-            try withAnimation {
+            _ = try withAnimation {
                 try store.undoPendingRemoval()
             }
         } catch {
