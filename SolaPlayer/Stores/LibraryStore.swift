@@ -59,7 +59,7 @@ final class LibraryStore {
     func items(in scope: PlaybackScope) -> [AudioItem] {
         switch scope {
         case .master:
-            items.sorted {
+            return items.sorted {
                 ($0.masterOrder, $0.createdAt) < ($1.masterOrder, $1.createdAt)
             }
         case let .group(groupID):
