@@ -21,7 +21,7 @@ struct RootView: View {
                     AboutView()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(AppPalette.clearSky.colors.top)
+                .tint(AppColor.ink)
                 .foregroundStyle(.white)
                 .controlSize(.large)
             }
