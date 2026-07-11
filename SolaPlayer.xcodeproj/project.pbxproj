@@ -37,6 +37,7 @@
 		45C2118BBD0BF13336DA10C9 /* WaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA352F50BB22A99114CDEBB /* WaveformService.swift */; };
 		47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C337ED7E0CD0FF17857391 /* BuildInfo.swift */; };
 		49337E3572746CBA09AE232D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E68759516AC6B23889CFAFD /* RootView.swift */; };
+		4A2581396483AA4D89A1E595 /* PaletteSelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */; };
 		4BCDDE83BA389BD196B3C800 /* AppPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882E8F84F9F37AA950591D7D /* AppPreferenceKey.swift */; };
 		4E89ABAA149D927320010712 /* MarkerRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863C3C8C400A2B1E0731A687 /* MarkerRowView.swift */; };
 		5120FAB0809A7CE22721B65D /* LibraryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51AD0DB320A6DCD5238AB73C /* LibraryHeaderView.swift */; };
@@ -45,12 +46,15 @@
 		54FF8D03D4C175E3A8AA92F9 /* PlayerStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC80E518D3487F0289A3409 /* PlayerStoreError.swift */; };
 		59B518283AA2A5796EFEF512 /* ImportedAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8501C73D6DEDC36CBF0B93DC /* ImportedAudio.swift */; };
 		5B112D198BDD316B17628671 /* LibraryPersisting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0306D7EF467AEEC0C30D0552 /* LibraryPersisting.swift */; };
+		5E02FF5FDB4DE93D8E480204 /* DesignPreviewAudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */; };
 		63A8263A53C510D7B79F0049 /* StubWaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E39D4C6ACA6DE710B3FAF243 /* StubWaveformService.swift */; };
+		65A0E544BFEC28765F4A1DB4 /* MiniWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698067D848CF752210FE94A4 /* MiniWaveformView.swift */; };
 		698ADE3FF5C1A288246087A0 /* RemoteAudioDownloading.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7CDBBEC2DC39D462AAADE0D /* RemoteAudioDownloading.swift */; };
 		6AB60E593845947000DEE054 /* WaveformServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DAABCF3C8F3AF0A3DF97E0 /* WaveformServiceTests.swift */; };
 		6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C95532889AEE624311C1AD /* AppSpacing.swift */; };
 		70A2EC3CA0A9F964A959DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77BAFA78098510BA13C95A8B /* Assets.xcassets */; };
 		721452DD41A62C733A1552DB /* PlaybackQueueSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */; };
+		721E06D7438C1DCE27F523FA /* DesignPreviewWaveformService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */; };
 		77D3C76A14F3F44CF8D6ECAF /* LibraryTestContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F844AD87B095073ECE489F3 /* LibraryTestContext.swift */; };
 		7877A62614C8273C301442F3 /* AppTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = C735450BDAEFEEBB74850AF7 /* AppTypography.swift */; };
 		81225DA6444B37DC1CA142EE /* GroupPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */; };
@@ -61,12 +65,16 @@
 		8653C612419389E246B92B0F /* SolaPlayerSchemaV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A781C07C468A8AE958B510E /* SolaPlayerSchemaV1.swift */; };
 		87C2752B52AA35914EAF9D54 /* AudioPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24291E583ACAB91181BA197A /* AudioPlaying.swift */; };
 		8A97E8FAB3D394723BF8FCFE /* TestTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 624FD6047230089A7B6581AC /* TestTags.swift */; };
+		8F8DD944EEDE27B0B083846D /* NowPlayingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40DE026CC512CCF58DCBF80 /* NowPlayingBar.swift */; };
 		8FEF0A03A1DFE35BAC12D2F2 /* RemoteAudioImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609AEB2D7FE91F10F8622912 /* RemoteAudioImportError.swift */; };
 		92A0CECA9A41E904737FDBB2 /* PlayerStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4849D637560EECCE0EAE3A9 /* PlayerStoreTests.swift */; };
 		97858FA5C2833ECDAA24598D /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */; };
+		9801D05AFE9694B0F0521A80 /* ScrubberPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */; };
 		982024D146A24FA14EDBBC5D /* AudioImportError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E2712F1596A389791793E2E /* AudioImportError.swift */; };
 		9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840B3C14FF6253CA3EA07E96 /* AppRadius.swift */; };
+		A0CCB2492C96BED8F765BC22 /* DesignPreviewSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */; };
 		A4EFCB41D968301E2A086ADE /* DeletionTrackingImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8F985D75FE249FD32F8D9E /* DeletionTrackingImporter.swift */; };
+		A9FBA632EBC0F2CAA624B1CD /* LibraryBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780C08E8DD5D067338FA184E /* LibraryBackground.swift */; };
 		ABDC3FB24043CB081211D55E /* RootRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A16B959E4EFB8D2D52B99E /* RootRoute.swift */; };
 		ACBC380FA3BE31FD57D9FA5D /* PlaybackScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BAF3BCA02B555AFF576DF4 /* PlaybackScope.swift */; };
 		B1B691A348F3C9B1125CB065 /* AppHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */; };
@@ -76,10 +84,13 @@
 		B4C1F10913852217A904A6A4 /* LibraryItemDeletionHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FFC82C203485540124CCC0 /* LibraryItemDeletionHandlerTests.swift */; };
 		B62D1E90CCFEEB4FC02E142C /* StubAudioImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB17569069DA689E6A1E6BB3 /* StubAudioImporter.swift */; };
 		B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413C6D3C1B4F702ABD07422C /* SolaPlayerMigrationPlan.swift */; };
+		B71D9481A5398D02D9BE9063 /* SettingsPreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */; };
 		B77B9F6127588906B017C27E /* Membership.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC9F9860DF94B597ACFC3A3 /* Membership.swift */; };
 		B979287A0C50B44C4CC68815 /* SolaPlayerSchemaV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352EACA83480B06A95ABEFA7 /* SolaPlayerSchemaV2.swift */; };
+		BB0D3C3CDA2D556745E6602E /* PlayerGlassButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */; };
 		C3F6B0D694F318B967EF298B /* AppFontModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */; };
 		C8FA62055381C5569E1CBD29 /* PlayerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A44EBF3BA179E7383811C6 /* PlayerStore.swift */; };
+		CECD91CC550916370295C80F /* PlayerActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */; };
 		CF8EEC73673BB049F68C45B5 /* RemoteAudioImportResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150C41556241C4AE24278C94 /* RemoteAudioImportResponseTests.swift */; };
 		D18FA4D6DA1A19EF70054FB9 /* MembershipRemoval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ACDE5AB6BAC828D0495D9D9 /* MembershipRemoval.swift */; };
 		D33BB3D0302ED9998ED37620 /* UndoSnackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BD850E0C5903421026DEEE /* UndoSnackbar.swift */; };
@@ -123,6 +134,7 @@
 		22678A5C22F66B7A79564F5F /* TimeInterval+DurationText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+DurationText.swift"; sourceTree = "<group>"; };
 		24291E583ACAB91181BA197A /* AudioPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlaying.swift; sourceTree = "<group>"; };
 		24F948279F8972D9618653A7 /* StubAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubAudioEngine.swift; sourceTree = "<group>"; };
+		2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewSeeder.swift; sourceTree = "<group>"; };
 		2AC80E518D3487F0289A3409 /* PlayerStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStoreError.swift; sourceTree = "<group>"; };
 		3009D312917479C602273FE6 /* AppInitializationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationFailureView.swift; sourceTree = "<group>"; };
 		329C8611F4A8EB4B0B5F367A /* MarkerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStore.swift; sourceTree = "<group>"; };
@@ -131,10 +143,12 @@
 		35A44EBF3BA179E7383811C6 /* PlayerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStore.swift; sourceTree = "<group>"; };
 		36F5B0BE6F4CE81F8E80ECBA /* MarkerStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStoreError.swift; sourceTree = "<group>"; };
 		3BC9F9860DF94B597ACFC3A3 /* Membership.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Membership.swift; sourceTree = "<group>"; };
+		3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerGlassButtonStyle.swift; sourceTree = "<group>"; };
 		413C6D3C1B4F702ABD07422C /* SolaPlayerMigrationPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerMigrationPlan.swift; sourceTree = "<group>"; };
 		451413C08F347C20D3522FFD /* ImportCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportCardView.swift; sourceTree = "<group>"; };
 		45A16B959E4EFB8D2D52B99E /* RootRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootRoute.swift; sourceTree = "<group>"; };
 		4A781C07C468A8AE958B510E /* SolaPlayerSchemaV1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerSchemaV1.swift; sourceTree = "<group>"; };
+		4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteSelectionRow.swift; sourceTree = "<group>"; };
 		4CB8C98A77F3B63A83BDB3E3 /* AppHaptic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppHaptic.swift; sourceTree = "<group>"; };
 		4E68759516AC6B23889CFAFD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4FB5E0385E803423FCB62B2E /* AudioGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGroup.swift; sourceTree = "<group>"; };
@@ -152,12 +166,15 @@
 		609AEB2D7FE91F10F8622912 /* RemoteAudioImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAudioImportError.swift; sourceTree = "<group>"; };
 		624FD6047230089A7B6581AC /* TestTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTags.swift; sourceTree = "<group>"; };
 		63BD850E0C5903421026DEEE /* UndoSnackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoSnackbar.swift; sourceTree = "<group>"; };
+		63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewWaveformService.swift; sourceTree = "<group>"; };
 		673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPickerSheet.swift; sourceTree = "<group>"; };
+		698067D848CF752210FE94A4 /* MiniWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniWaveformView.swift; sourceTree = "<group>"; };
 		6E2712F1596A389791793E2E /* AudioImportError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportError.swift; sourceTree = "<group>"; };
 		71DAABCF3C8F3AF0A3DF97E0 /* WaveformServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformServiceTests.swift; sourceTree = "<group>"; };
 		73CBE7D889CBA710CA1AC261 /* FailingPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailingPersistence.swift; sourceTree = "<group>"; };
 		73F5B037332F0E406C8AEA97 /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
 		77BAFA78098510BA13C95A8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		780C08E8DD5D067338FA184E /* LibraryBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryBackground.swift; sourceTree = "<group>"; };
 		782646378C2F8E0C6F916172 /* AudioItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioItem.swift; sourceTree = "<group>"; };
 		7ADF57A04C70790B84922BC5 /* AppGradientColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGradientColors.swift; sourceTree = "<group>"; };
 		7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackQueueSheet.swift; sourceTree = "<group>"; };
@@ -189,10 +206,12 @@
 		AB7EF9CF55F42E18D3A5089A /* GroupChipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChipsView.swift; sourceTree = "<group>"; };
 		AEA6D72D40DC0933F6D17656 /* AppPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPalette.swift; sourceTree = "<group>"; };
 		AF6034A78883513C490A17ED /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerActionButtons.swift; sourceTree = "<group>"; };
 		B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		B42B19529254AE6ED383B5CC /* NameEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameEditorSheet.swift; sourceTree = "<group>"; };
 		B587481DAFA171EC600C9C57 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		B7CDBBEC2DC39D462AAADE0D /* RemoteAudioDownloading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAudioDownloading.swift; sourceTree = "<group>"; };
+		BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPreviewCard.swift; sourceTree = "<group>"; };
 		BE008AAB4B292A5ECCA6FDB3 /* MarkerStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStoreTests.swift; sourceTree = "<group>"; };
 		C249DFAC7FE5E0A3D68BF347 /* WaveformServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformServiceError.swift; sourceTree = "<group>"; };
 		C424562CC7026D0C00CE2338 /* TransportControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportControls.swift; sourceTree = "<group>"; };
@@ -205,11 +224,14 @@
 		D73E837293DA0FF29F01618C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerApp.swift; sourceTree = "<group>"; };
 		E39D4C6ACA6DE710B3FAF243 /* StubWaveformService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubWaveformService.swift; sourceTree = "<group>"; };
+		E40DE026CC512CCF58DCBF80 /* NowPlayingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingBar.swift; sourceTree = "<group>"; };
 		E4849D637560EECCE0EAE3A9 /* PlayerStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStoreTests.swift; sourceTree = "<group>"; };
+		E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPreviewAudioEngine.swift; sourceTree = "<group>"; };
 		EC8F985D75FE249FD32F8D9E /* DeletionTrackingImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionTrackingImporter.swift; sourceTree = "<group>"; };
 		EDB96125B8EAFDF08D58532D /* AppFontModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontModifier.swift; sourceTree = "<group>"; };
 		F8CD576B93A9205DE9F348CD /* WaveformScrubber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformScrubber.swift; sourceTree = "<group>"; };
 		FA675418CC557FFB44DAFF28 /* ImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportService.swift; sourceTree = "<group>"; };
+		FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubberPillView.swift; sourceTree = "<group>"; };
 		FB17569069DA689E6A1E6BB3 /* StubAudioImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubAudioImporter.swift; sourceTree = "<group>"; };
 		FE6F4B30743BCDD6B21E4D5D /* ImportServiceDeletionRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportServiceDeletionRecoveryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,11 +257,14 @@
 				1E1EA9F6C7C386A9A8B1F35F /* GroupPickerRequest.swift */,
 				673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */,
 				451413C08F347C20D3522FFD /* ImportCardView.swift */,
+				780C08E8DD5D067338FA184E /* LibraryBackground.swift */,
 				51AD0DB320A6DCD5238AB73C /* LibraryHeaderView.swift */,
 				B3C89B28F8830A6EDE617DC2 /* LibraryView.swift */,
 				5E27919DE0CE991BA255F24B /* LinkImportSheet.swift */,
 				58BEA0C411A8A9EEBCA7AE04 /* ManageGroupsSheet.swift */,
+				698067D848CF752210FE94A4 /* MiniWaveformView.swift */,
 				B42B19529254AE6ED383B5CC /* NameEditorSheet.swift */,
+				E40DE026CC512CCF58DCBF80 /* NowPlayingBar.swift */,
 				A13AC52940D556A610E40E08 /* PresentedError.swift */,
 				D10CADCC77D24037039E7E2D /* ScopeChipButton.swift */,
 				22678A5C22F66B7A79564F5F /* TimeInterval+DurationText.swift */,
@@ -255,6 +280,9 @@
 				3009D312917479C602273FE6 /* AppInitializationFailureView.swift */,
 				B587481DAFA171EC600C9C57 /* AppModelContainer.swift */,
 				882E8F84F9F37AA950591D7D /* AppPreferenceKey.swift */,
+				E6E347BDC43F087BFFF1BEFC /* DesignPreviewAudioEngine.swift */,
+				2918FC01D91363F86FCBAD66 /* DesignPreviewSeeder.swift */,
+				63E9AD7A77AA310CE6C92DFB /* DesignPreviewWaveformService.swift */,
 				45A16B959E4EFB8D2D52B99E /* RootRoute.swift */,
 				4E68759516AC6B23889CFAFD /* RootView.swift */,
 				DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */,
@@ -277,7 +305,10 @@
 				AAFCD4F646102069B9F7A291 /* .gitkeep */,
 				D59C756AB57F33176ECDF1EE /* GradientBackground.swift */,
 				7B70949205A46D4180E8113E /* PlaybackQueueSheet.swift */,
+				B15711046B8EDF541250C4A5 /* PlayerActionButtons.swift */,
+				3FD2FBFEC5661CDE07DC8D62 /* PlayerGlassButtonStyle.swift */,
 				CC76E9983FB7B298AFDD64E1 /* PlayerView.swift */,
+				FAEF7649E05650F8FFA55A2A /* ScrubberPillView.swift */,
 				C424562CC7026D0C00CE2338 /* TransportControls.swift */,
 				F8CD576B93A9205DE9F348CD /* WaveformScrubber.swift */,
 			);
@@ -342,6 +373,8 @@
 		84C20266AB2D710B4C7AE6BB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4C8CCD1BDEAEC7D169CC23CF /* PaletteSelectionRow.swift */,
+				BBC3E3232C806772698E77D4 /* SettingsPreviewCard.swift */,
 				D73E837293DA0FF29F01618C /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -633,6 +666,9 @@
 				3DDD8E32AC4184FAF1D117E1 /* AudioItem.swift in Sources */,
 				87C2752B52AA35914EAF9D54 /* AudioPlaying.swift in Sources */,
 				47C6B579A59B21DA8EC3EB96 /* BuildInfo.swift in Sources */,
+				5E02FF5FDB4DE93D8E480204 /* DesignPreviewAudioEngine.swift in Sources */,
+				A0CCB2492C96BED8F765BC22 /* DesignPreviewSeeder.swift in Sources */,
+				721E06D7438C1DCE27F523FA /* DesignPreviewWaveformService.swift in Sources */,
 				33C16573490E7E80AD1A297D /* GradientBackground.swift in Sources */,
 				424E74201E0BD14C157663B6 /* GroupChipsView.swift in Sources */,
 				31E04A649B66C8F612B7E1A5 /* GroupPickerRequest.swift in Sources */,
@@ -640,6 +676,7 @@
 				DFFB4C6882D7A85125B2CC0D /* ImportCardView.swift in Sources */,
 				E7BB951E6775C00AE774B3DF /* ImportService.swift in Sources */,
 				59B518283AA2A5796EFEF512 /* ImportedAudio.swift in Sources */,
+				A9FBA632EBC0F2CAA624B1CD /* LibraryBackground.swift in Sources */,
 				5120FAB0809A7CE22721B65D /* LibraryHeaderView.swift in Sources */,
 				5B112D198BDD316B17628671 /* LibraryPersisting.swift in Sources */,
 				305BFAC36F519B8357EBADA5 /* LibraryStore.swift in Sources */,
@@ -656,11 +693,16 @@
 				B27912091B3AA190138C7295 /* MarkerStoreError.swift in Sources */,
 				B77B9F6127588906B017C27E /* Membership.swift in Sources */,
 				D18FA4D6DA1A19EF70054FB9 /* MembershipRemoval.swift in Sources */,
+				65A0E544BFEC28765F4A1DB4 /* MiniWaveformView.swift in Sources */,
 				E13E3D4F6B36A859B9281CBC /* NameEditorSheet.swift in Sources */,
+				8F8DD944EEDE27B0B083846D /* NowPlayingBar.swift in Sources */,
+				4A2581396483AA4D89A1E595 /* PaletteSelectionRow.swift in Sources */,
 				D641152086C2B7C39DD499ED /* PersistenceService.swift in Sources */,
 				F108DB3B3D86082DD83E94B2 /* PlaybackQueueItem.swift in Sources */,
 				721452DD41A62C733A1552DB /* PlaybackQueueSheet.swift in Sources */,
 				ACBC380FA3BE31FD57D9FA5D /* PlaybackScope.swift in Sources */,
+				CECD91CC550916370295C80F /* PlayerActionButtons.swift in Sources */,
+				BB0D3C3CDA2D556745E6602E /* PlayerGlassButtonStyle.swift in Sources */,
 				C8FA62055381C5569E1CBD29 /* PlayerStore.swift in Sources */,
 				54FF8D03D4C175E3A8AA92F9 /* PlayerStoreError.swift in Sources */,
 				D6324A4827923B9D71917A5A /* PlayerView.swift in Sources */,
@@ -671,6 +713,8 @@
 				49337E3572746CBA09AE232D /* RootView.swift in Sources */,
 				370F870AEF1DB8C56440988B /* ScopeChipButton.swift in Sources */,
 				1B690773A1EECF7D5FDCAC4B /* ScrubDirection.swift in Sources */,
+				9801D05AFE9694B0F0521A80 /* ScrubberPillView.swift in Sources */,
+				B71D9481A5398D02D9BE9063 /* SettingsPreviewCard.swift in Sources */,
 				FE18D9A4613C362493D57F61 /* SettingsView.swift in Sources */,
 				2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */,
 				B678730EDDDC2EEC27B3FB83 /* SolaPlayerMigrationPlan.swift in Sources */,

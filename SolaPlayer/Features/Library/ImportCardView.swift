@@ -1,15 +1,16 @@
 import SwiftUI
 
 struct ImportCardView: View {
+    let isEmpty: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
             Label {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("导入第一段音频")
+                    Text(isEmpty ? "导入第一段音频" : "导入音频")
                         .font(.headline)
-                    Text("文件或文件夹 · 链接 · AirDrop")
+                    Text("文件 · 文件夹 · 链接 · AirDrop")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -18,15 +19,16 @@ struct ImportCardView: View {
                     .font(.title2)
                     .foregroundStyle(.white)
                     .frame(width: 44, height: 44)
-                    .background(AppColor.ink, in: .rect(cornerRadius: 12))
+                    .background(AppColor.ink, in: .rect(cornerRadius: 14))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(AppSpacing.standard)
+            .padding(.horizontal, AppSpacing.standard)
+            .padding(.vertical, 18)
         }
         .buttonStyle(.plain)
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.card)
-                .stroke(.secondary.opacity(0.4), style: StrokeStyle(lineWidth: 1.5, dash: [6]))
+                .stroke(AppColor.secondaryInk.opacity(0.38), style: StrokeStyle(lineWidth: 1.5, dash: [6]))
                 .allowsHitTesting(false)
         }
         .accessibilityHint("打开系统文件选择器")

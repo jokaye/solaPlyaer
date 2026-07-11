@@ -51,12 +51,7 @@ struct WaveformScrubber: View {
                     drawWaveform(in: context, size: size)
                 }
 
-                Text((progress * duration).durationText)
-                    .appFont(AppTypography.pill)
-                    .foregroundStyle(AppColor.ink)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.white, in: .capsule)
+                ScrubberPillView(text: (progress * duration).durationText)
                     .offset(x: pillOffset(for: proxy.size.width))
 
                 ForEach(markers) { marker in

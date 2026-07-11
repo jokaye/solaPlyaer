@@ -3,49 +3,44 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage(AppPreferenceKey.globalPalette) private var globalPaletteKey = AppPalette.clearSky.rawValue
 
+    private var selectedPalette: AppPalette {
+        AppPalette(rawValue: globalPaletteKey) ?? .clearSky
+    }
+
     var body: some View {
-        Form {
-            Section {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.standard) {
+                SettingsPreviewCard(palette: selectedPalette)
+
+                Text("选择全局天气主题")
+                    .font(.headline)
+                    .foregroundStyle(AppColor.ink)
+                    .padding(.top, AppSpacing.small)
+
+                Text("未单独设置主题的音频会使用这里的配色。")
+                    .font(.subheadline)
+                    .foregroundStyle(AppColor.secondaryInk)
+
                 ForEach(AppPalette.allCases) { palette in
-                    Button(action: { select(palette) }) {
-                        HStack(spacing: AppSpacing.standard) {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(palette.gradient)
-                                .frame(width: 52, height: 32)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(.primary.opacity(0.08))
-                                }
-                                .accessibilityHidden(true)
-
-                            Text(palette.label)
-                                .foregroundStyle(.primary)
-
-                            Spacer()
-
-                            if globalPaletteKey == palette.rawValue {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(AppColor.ink)
-                                    .accessibilityHidden(true)
-                            }
-                        }
-                        .frame(minHeight: 44)
-                    }
-                    .accessibilityValue(
-                        globalPaletteKey == palette.rawValue ? "已选择" : "未选择"
+                    PaletteSelectionRow(
+                        palette: palette,
+                        isSelected: palette == selectedPalette,
+                        action: { select(palette) }
                     )
                 }
-            } header: {
-                Text("播放页主题")
-            } footer: {
-                Text("全局主题用于所有未设置单曲主题的音频。单曲主题可在音库的曲目菜单中覆盖。")
             }
+            .padding(.horizontal, AppSpacing.controls)
+            .padding(.vertical, AppSpacing.standard)
         }
-        .navigationTitle("设置")
+        .background(LibraryBackground())
+        .navigationTitle("主题配色")
         .navigationBarTitleDisplayMode(.inline)
+        .tint(AppColor.ink)
     }
 
     private func select(_ palette: AppPalette) {
-        globalPaletteKey = palette.rawValue
+        withAnimation(.easeInOut(duration: 0.35)) {
+            globalPaletteKey = palette.rawValue
+        }
     }
 }

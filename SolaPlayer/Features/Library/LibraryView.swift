@@ -3,7 +3,9 @@ import UniformTypeIdentifiers
 
 struct LibraryView: View {
     @Bindable var store: LibraryStore
+    @Bindable var playerStore: PlayerStore
     let onPlay: (AudioItem, PlaybackScope) -> Void
+    let onResumePlayer: () -> Void
 
     @State private var isShowingImporter = false
     @State private var isShowingLinkImporter = false
@@ -15,6 +17,7 @@ struct LibraryView: View {
     @State private var isShowingDeleteConfirmation = false
     @State private var presentedError: PresentedError?
     @State private var selectedItemIDs: Set<UUID> = []
+    @State private var editMode: EditMode = .inactive
 
     private func setPalette(_ palette: AppPalette?, for item: AudioItem) {
         do {
@@ -40,9 +43,17 @@ struct LibraryView: View {
             }
 
             Section {
-                LibraryHeaderView(itemCount: store.items.count, groupCount: store.groups.count)
+                LibraryHeaderView(
+                    itemCount: store.items.count,
+                    groupCount: store.groups.count,
+                    isImporting: store.isImporting,
+                    onImport: showImporter,
+                    onLinkImport: showLinkImporter,
+                    onManageGroups: showManageGroups
+                )
                     .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 2, trailing: 0))
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
 
                 GroupChipsView(
                     store: store,
@@ -52,11 +63,22 @@ struct LibraryView: View {
                 )
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
             }
 
-            Section(store.scopeName) {
+            Section {
                 if store.scope == .master {
-                    ImportCardView(action: showImporter)
+                    ImportCardView(isEmpty: store.items.isEmpty, action: showImporter)
+                        .listRowInsets(
+                            EdgeInsets(
+                                top: 0,
+                                leading: AppSpacing.controls,
+                                bottom: AppSpacing.standard,
+                                trailing: AppSpacing.controls
+                            )
+                        )
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                 }
 
                 if store.visibleItems.isEmpty, store.scope != .master {
@@ -70,6 +92,7 @@ struct LibraryView: View {
                         TrackRowView(
                             item: item,
                             membershipCount: store.membershipCount(for: item),
+                            isCurrent: playerStore.currentItem?.id == item.id,
                             canRemoveFromCurrentGroup: store.scope != .master,
                             selectedPalette: item.paletteKey.flatMap(AppPalette.init(rawValue:)),
                             onPlay: { onPlay(item, store.scope) },
@@ -80,35 +103,44 @@ struct LibraryView: View {
                             onDelete: { confirmDelete(item) }
                         )
                         .tag(item.id)
+                        .listRowInsets(
+                            EdgeInsets(
+                                top: 3,
+                                leading: AppSpacing.controls,
+                                bottom: 3,
+                                trailing: AppSpacing.controls
+                            )
+                        )
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                     }
                     .onMove(perform: moveItems)
                 }
+            } header: {
+                HStack {
+                    Text(scopeSummary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    if store.scope != .master, store.visibleItems.isEmpty == false {
+                        Button(editMode.isEditing ? "完成" : "编辑", action: toggleEditMode)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(AppPalette.lake.colors.top)
+                    }
+                }
+                .textCase(nil)
+                .padding(.horizontal, 4)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .listSectionSpacing(12)
+        .scrollContentBackground(.hidden)
+        .background(LibraryBackground())
         .navigationTitle("")
+        .toolbar(.hidden, for: .navigationBar)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                if store.visibleItems.isEmpty == false {
-                    EditButton()
-                }
-
-                Button("导入音频", systemImage: "plus", action: showImporter)
-                    .disabled(store.isImporting)
-
-                Menu("更多", systemImage: "ellipsis.circle") {
-                    NavigationLink(value: RootRoute.settings) {
-                        Label("设置", systemImage: "gearshape")
-                    }
-                    Button("从链接导入", systemImage: "link", action: showLinkImporter)
-                    Button("管理分组", systemImage: "rectangle.3.group", action: showManageGroups)
-                        .disabled(store.groups.isEmpty)
-                    NavigationLink(value: RootRoute.about) {
-                        Label("关于与诊断", systemImage: "info.circle")
-                    }
-                }
-            }
-
             if selectedItemIDs.isEmpty == false {
                 ToolbarItemGroup(placement: .bottomBar) {
                     Text("已选择 \(selectedItemIDs.count) 项")
@@ -117,6 +149,15 @@ struct LibraryView: View {
                 }
             }
         }
+        .environment(\.editMode, $editMode)
+    }
+
+    private var scopeSummary: String {
+        let base = "\(store.visibleItems.count) 段音频"
+        if store.scope == .master {
+            return base
+        }
+        return "\(base) · 组内自定义顺序"
     }
 
     private var librarySheets: some View {
@@ -168,16 +209,31 @@ struct LibraryView: View {
             selectedItemIDs.removeAll()
         }
         .overlay(alignment: .bottom) {
-            if let removal = store.pendingRemoval {
-                UndoSnackbar(removal: removal, undo: undoRemoval)
-                    .padding(AppSpacing.controls)
+            VStack(spacing: AppSpacing.small) {
+                if let removal = store.pendingRemoval {
+                    UndoSnackbar(removal: removal, undo: undoRemoval)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+
+                if let currentItem = playerStore.currentItem {
+                    NowPlayingBar(
+                        item: currentItem,
+                        sourceName: playerStore.sourceName,
+                        isPlaying: playerStore.isPlaying,
+                        onOpen: onResumePlayer,
+                        onTogglePlayback: toggleMiniPlayer
+                    )
                     .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
             }
+            .padding(.horizontal, 12)
+            .padding(.bottom, AppSpacing.standard)
         }
         .task(id: store.pendingRemoval?.id) {
             await dismissRemovalAfterDelay(store.pendingRemoval)
         }
         .task {
+            configureDesignPreviewIfNeeded()
             await reconcilePendingFileDeletions()
         }
     }
@@ -296,6 +352,40 @@ struct LibraryView: View {
 
     private func present(_ error: Error) {
         presentedError = PresentedError(error)
+    }
+
+    private func toggleMiniPlayer() {
+        do {
+            try playerStore.togglePlayback()
+        } catch {
+            present(error)
+        }
+    }
+
+    private func toggleEditMode() {
+        withAnimation(.easeInOut(duration: 0.22)) {
+            editMode = editMode.isEditing ? .inactive : .active
+        }
+    }
+
+    private func configureDesignPreviewIfNeeded() {
+        #if DEBUG
+        switch ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"] {
+        case "group-edit":
+            guard let group = store.groups.first(where: { $0.name == "灵感速记" }) else {
+                return
+            }
+            try? store.setScope(.group(group.id))
+            editMode = .active
+        case "group-sheet":
+            guard let item = store.items.first else {
+                return
+            }
+            groupPickerRequest = GroupPickerRequest(items: [item])
+        default:
+            break
+        }
+        #endif
     }
 
     private func dismissRemovalAfterDelay(_ removal: MembershipRemoval?) async {

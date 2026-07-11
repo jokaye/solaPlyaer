@@ -5,6 +5,7 @@ import SwiftData
 struct SolaPlayerApp: App {
     private let modelContainer: ModelContainer?
     private let initializationFailureMessage: String?
+    private let initialRoute: RootRoute?
     @State private var libraryStore: LibraryStore?
     @State private var playerStore: PlayerStore?
     @State private var markerStore: MarkerStore?
@@ -13,6 +14,7 @@ struct SolaPlayerApp: App {
         let dependencies = Self.makeDependencies()
         modelContainer = dependencies.modelContainer
         initializationFailureMessage = dependencies.failureMessage
+        initialRoute = dependencies.initialRoute
         _libraryStore = State(initialValue: dependencies.libraryStore)
         _playerStore = State(initialValue: dependencies.playerStore)
         _markerStore = State(initialValue: dependencies.markerStore)
@@ -23,20 +25,45 @@ struct SolaPlayerApp: App {
         failureMessage: String?,
         libraryStore: LibraryStore?,
         playerStore: PlayerStore?,
-        markerStore: MarkerStore?
+        markerStore: MarkerStore?,
+        initialRoute: RootRoute?
     ) {
         do {
-            let modelContainer = try AppModelContainer.make()
+            #if DEBUG
+            let previewRoute = ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"]
+            #else
+            let previewRoute: String? = nil
+            #endif
+
+            let modelContainer = try AppModelContainer.make(inMemory: previewRoute != nil)
+            #if DEBUG
+            if previewRoute != nil, previewRoute != "empty-library" {
+                try DesignPreviewSeeder.seed(modelContext: modelContainer.mainContext)
+            }
+            #endif
             let persistence = PersistenceService(modelContext: modelContainer.mainContext)
             let importer = try ImportService()
-            let waveformService = try WaveformService()
+            let engine: any AudioPlaying
+            let waveformService: any WaveformProviding
+            #if DEBUG
+            if previewRoute != nil {
+                engine = DesignPreviewAudioEngine()
+                waveformService = DesignPreviewWaveformService()
+            } else {
+                engine = AudioEngine()
+                waveformService = try WaveformService()
+            }
+            #else
+            engine = AudioEngine()
+            waveformService = try WaveformService()
+            #endif
 
             let libraryStore = try LibraryStore(
                 persistence: persistence,
                 importer: importer
             )
             let playerStore = PlayerStore(
-                engine: AudioEngine(),
+                engine: engine,
                 waveformService: waveformService
             )
             let markerStore = MarkerStore(persistence: persistence)
@@ -45,9 +72,28 @@ struct SolaPlayerApp: App {
                 markerStore?.handleDeletedAudio(id: itemID)
             }
 
-            return (modelContainer, nil, libraryStore, playerStore, markerStore)
+            if previewRoute == "library", let itemID = libraryStore.items.first?.id {
+                try playerStore.start(
+                    queue: libraryStore.items.map(PlaybackQueueItem.init),
+                    initialItemID: itemID,
+                    sourceName: "默认列表"
+                )
+            }
+
+            let initialRoute: RootRoute?
+            if let previewRoute,
+               ["player", "markers", "queue"].contains(previewRoute),
+               let itemID = libraryStore.items.first?.id {
+                initialRoute = .player(scope: .master, itemID: itemID)
+            } else if previewRoute == "settings" {
+                initialRoute = .settings
+            } else {
+                initialRoute = nil
+            }
+
+            return (modelContainer, nil, libraryStore, playerStore, markerStore, initialRoute)
         } catch {
-            return (nil, error.localizedDescription, nil, nil, nil)
+            return (nil, error.localizedDescription, nil, nil, nil, nil)
         }
     }
 
@@ -60,7 +106,8 @@ struct SolaPlayerApp: App {
                 RootView(
                     store: libraryStore,
                     playerStore: playerStore,
-                    markerStore: markerStore
+                    markerStore: markerStore,
+                    initialRoute: initialRoute
                 )
                 .modelContainer(modelContainer)
             } else {

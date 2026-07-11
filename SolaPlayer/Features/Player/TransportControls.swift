@@ -9,7 +9,7 @@ struct TransportControls: View {
     var body: some View {
         HStack(spacing: 40) {
             Button("上一首", systemImage: "backward.fill", action: onPrevious)
-                .font(.title3)
+                .font(.system(size: 18))
                 .frame(width: 44, height: 44)
 
             Button(
@@ -21,7 +21,7 @@ struct TransportControls: View {
             .frame(width: 44, height: 44)
 
             Button("下一首", systemImage: "forward.fill", action: onNext)
-                .font(.title3)
+                .font(.system(size: 18))
                 .frame(width: 44, height: 44)
         }
         .labelStyle(.iconOnly)

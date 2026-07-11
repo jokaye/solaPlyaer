@@ -7,9 +7,26 @@ struct RootView: View {
 
     @State private var path: [RootRoute] = []
 
+    init(
+        store: LibraryStore,
+        playerStore: PlayerStore,
+        markerStore: MarkerStore,
+        initialRoute: RootRoute? = nil
+    ) {
+        self.store = store
+        self.playerStore = playerStore
+        self.markerStore = markerStore
+        _path = State(initialValue: initialRoute.map { [$0] } ?? [])
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
-            LibraryView(store: store, onPlay: play)
+            LibraryView(
+                store: store,
+                playerStore: playerStore,
+                onPlay: play,
+                onResumePlayer: resumePlayer
+            )
                 .navigationDestination(for: RootRoute.self) { route in
                     switch route {
                     case .about:
@@ -28,9 +45,20 @@ struct RootView: View {
                     }
                 }
         }
+        .tint(AppColor.ink)
     }
 
     private func play(_ item: AudioItem, in scope: PlaybackScope) {
         path.append(.player(scope: scope, itemID: item.id))
+    }
+
+    private func resumePlayer() {
+        guard let itemID = playerStore.currentItem?.id else {
+            return
+        }
+        let scope = store.groups.first(where: { $0.name == playerStore.sourceName })
+            .map { PlaybackScope.group($0.id) }
+            ?? .master
+        path.append(.player(scope: scope, itemID: itemID))
     }
 }

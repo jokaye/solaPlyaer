@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct PlayerView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @Bindable var store: PlayerStore
     @Bindable var libraryStore: LibraryStore
     @Bindable var markerStore: MarkerStore
@@ -32,22 +34,36 @@ struct PlayerView: View {
                     Text(store.currentItem?.title ?? "正在载入")
                         .appFont(AppTypography.playerTitle)
                         .lineLimit(2)
+
+                    HStack(spacing: 8) {
+                        Text("本地音频")
+                            .appFont(AppTypography.secondary)
+                            .foregroundStyle(.white.opacity(0.75))
+
+                        Text(palette.label)
+                            .appFont(AppTypography.metadata)
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 4)
+                            .background(.white.opacity(AppMaterial.controlFillOpacity), in: .capsule)
+                    }
                 }
                 .shadow(color: .black.opacity(0.08), radius: 12, y: 2)
 
                 Spacer(minLength: 80)
 
-                if store.isScrubbing, let direction = store.scrubDirection {
-                    Label(direction.label, systemImage: direction.systemImage)
-                        .appFont(AppTypography.pill)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(.white.opacity(0.18), in: .capsule)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .transition(.opacity)
+                HStack {
+                    Text("0:00")
+                    Spacer()
+                    Text((store.duration / 2).durationText)
+                    Spacer()
+                    Text(store.duration.durationText)
                 }
+                .appFont(AppTypography.metadata)
+                .foregroundStyle(.white.opacity(0.65))
+                .padding(.horizontal, 4)
+                .padding(.bottom, 2)
 
-                ZStack {
+                ZStack(alignment: .topTrailing) {
                     WaveformScrubber(
                         samples: store.samples,
                         progress: store.displayedProgress,
@@ -67,27 +83,26 @@ struct PlayerView: View {
                             .padding(.vertical, 6)
                             .background(.black.opacity(0.12), in: .capsule)
                     }
+
+                    if store.isScrubbing, let direction = store.scrubDirection {
+                        Label(direction.label, systemImage: direction.systemImage)
+                            .appFont(AppTypography.pill)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(.white.opacity(0.18), in: .capsule)
+                            .offset(y: -38)
+                            .transition(.opacity)
+                    }
                 }
-                .frame(height: 112)
+                .frame(height: 104)
 
-                HStack {
-                    Button("分组 \(membershipCount)", systemImage: "rectangle.3.group", action: showGroupPicker)
-                        .disabled(currentLibraryItem == nil)
-                        .frame(minHeight: 44)
-
-                    Spacer()
-
-                    Button(
-                        "标记此刻 \(markerStore.markers.count)",
-                        systemImage: "bookmark",
-                        action: addMarker
-                    )
-                    .disabled(store.currentItem == nil || store.duration <= 0)
-                    .frame(minHeight: 44)
-                }
-                .buttonStyle(.bordered)
-                .tint(.white)
-                .frame(minHeight: 44)
+                PlayerActionButtons(
+                    membershipCount: membershipCount,
+                    canGroup: currentLibraryItem != nil,
+                    canMark: store.currentItem != nil && store.duration > 0,
+                    onGroup: showGroupPicker,
+                    onMark: addMarker
+                )
 
                 TransportControls(
                     isPlaying: store.isPlaying,
@@ -103,10 +118,18 @@ struct PlayerView: View {
             .padding(.bottom, AppSpacing.controls)
         }
         .foregroundStyle(.white)
+        .tint(.white)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("返回", systemImage: "chevron.left", action: dismiss.callAsFunction)
+                    .labelStyle(.iconOnly)
+                    .foregroundStyle(.white)
+                    .tint(.white)
+            }
             ToolbarItem(placement: .principal) {
                 Button(action: showQueue) {
                     HStack(spacing: 4) {
@@ -123,8 +146,17 @@ struct PlayerView: View {
                 .accessibilityHint("展开当前播放队列")
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Button("标记列表", systemImage: "bookmark.fill", action: showMarkers)
-                    .disabled(store.currentItem == nil)
+                Menu {
+                    Button("标记列表", systemImage: "bookmark", action: showMarkers)
+                    Button("加入分组", systemImage: "rectangle.3.group", action: showGroupPicker)
+                        .disabled(currentLibraryItem == nil)
+                } label: {
+                    Label("更多", systemImage: "ellipsis")
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.white)
+                }
+                .disabled(store.currentItem == nil)
+                .tint(.white)
             }
         }
         .sheet(item: $itemForGrouping) { item in
@@ -154,6 +186,9 @@ struct PlayerView: View {
             loadMarkers(for: currentItemID)
             await loadWaveform()
         }
+        .task {
+            await configureDesignPreviewIfNeeded()
+        }
     }
 
     private var palette: AppPalette {
@@ -175,15 +210,17 @@ struct PlayerView: View {
     }
 
     private func runPlayer() async {
-        do {
-            try store.start(
-                queue: queue,
-                initialItemID: initialItemID,
-                sourceName: sourceName
-            )
-        } catch {
-            presentedError = PresentedError(error)
-            return
+        if store.queue != queue || store.currentItem?.id != initialItemID || store.sourceName != sourceName {
+            do {
+                try store.start(
+                    queue: queue,
+                    initialItemID: initialItemID,
+                    sourceName: sourceName
+                )
+            } catch {
+                presentedError = PresentedError(error)
+                return
+            }
         }
 
         while Task.isCancelled == false {
@@ -274,5 +311,26 @@ struct PlayerView: View {
         } catch {
             presentedError = PresentedError(error)
         }
+    }
+
+    private func configureDesignPreviewIfNeeded() async {
+        #if DEBUG
+        switch ProcessInfo.processInfo.environment["SOLA_DESIGN_PREVIEW"] {
+        case "markers":
+            try? await Task.sleep(for: .seconds(1))
+            guard Task.isCancelled == false else {
+                return
+            }
+            isShowingMarkers = true
+        case "queue":
+            try? await Task.sleep(for: .seconds(1))
+            guard Task.isCancelled == false else {
+                return
+            }
+            isShowingQueue = true
+        default:
+            break
+        }
+        #endif
     }
 }

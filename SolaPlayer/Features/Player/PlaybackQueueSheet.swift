@@ -40,10 +40,25 @@ struct PlaybackQueueSheet: View {
                             }
                         }
                         .frame(minHeight: 44)
+                        .padding(.horizontal, AppSpacing.standard)
+                        .padding(.vertical, 8)
+                        .background(
+                            item.id == currentItemID
+                                ? AppPalette.lake.colors.middle.opacity(0.22)
+                                : Color.white.opacity(0.9),
+                            in: .rect(cornerRadius: 18)
+                        )
                     }
+                    .buttonStyle(.plain)
                     .accessibilityValue(item.id == currentItemID ? "正在播放" : "")
+                    .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
                 }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(LibraryBackground())
             .navigationTitle(sourceName)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -56,6 +71,7 @@ struct PlaybackQueueSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
+        .presentationBackground(.ultraThinMaterial)
     }
 
     private func select(_ item: PlaybackQueueItem) {
