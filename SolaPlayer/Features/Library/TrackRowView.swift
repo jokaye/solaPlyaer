@@ -58,8 +58,8 @@ struct TrackRowView: View {
             .buttonStyle(.plain)
             .accessibilityHint("进入播放页")
 
-            if isEditing, canRemoveFromCurrentGroup {
-                if isConfirmingRemoval {
+            if isEditing {
+                if canRemoveFromCurrentGroup, isConfirmingRemoval {
                     Button("移出", systemImage: "minus.circle", action: confirmRemoval)
                         .font(.subheadline.weight(.semibold))
                         .buttonStyle(.borderedProminent)

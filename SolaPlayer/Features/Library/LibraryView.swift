@@ -124,7 +124,16 @@ struct LibraryView: View {
 
                     Spacer()
 
-                    if store.scope != .master, store.visibleItems.isEmpty == false {
+                    if store.visibleItems.isEmpty == false, editMode.isEditing == false {
+                        Button(action: playCurrentScope) {
+                            Label("播放本列表", systemImage: "play.fill")
+                                .labelStyle(.titleAndIcon)
+                        }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppPalette.lake.colors.top)
+                    }
+
+                    if store.visibleItems.isEmpty == false {
                         Button(editMode.isEditing ? "完成" : "编辑", action: toggleEditMode)
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(AppPalette.lake.colors.top)
@@ -155,6 +164,9 @@ struct LibraryView: View {
     private var scopeSummary: String {
         let base = "\(store.visibleItems.count) 段音频"
         if store.scope == .master {
+            if editMode.isEditing {
+                return "\(base) · 自定义顺序"
+            }
             return base
         }
         return "\(base) · 组内自定义顺序"
@@ -207,6 +219,7 @@ struct LibraryView: View {
         librarySheets
         .onChange(of: store.scope) { _, _ in
             selectedItemIDs.removeAll()
+            editMode = .inactive
         }
         .overlay(alignment: .bottom) {
             VStack(spacing: AppSpacing.small) {
@@ -364,8 +377,20 @@ struct LibraryView: View {
 
     private func toggleEditMode() {
         withAnimation(.easeInOut(duration: 0.22)) {
-            editMode = editMode.isEditing ? .inactive : .active
+            if editMode.isEditing {
+                editMode = .inactive
+            } else {
+                selectedItemIDs.removeAll()
+                editMode = .active
+            }
         }
+    }
+
+    private func playCurrentScope() {
+        guard let first = store.visibleItems.first else {
+            return
+        }
+        onPlay(first, store.scope)
     }
 
     private func configureDesignPreviewIfNeeded() {

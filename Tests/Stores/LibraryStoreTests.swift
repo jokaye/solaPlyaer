@@ -55,6 +55,21 @@ struct LibraryStoreTests {
     }
 
     @MainActor
+    @Test("默认列表排序独立于分组顺序")
+    func masterOrderingIsIndependent() async throws {
+        let context = try LibraryTestContext(titles: ["一", "二", "三"])
+        try await context.store.importFiles(context.sourceURLs)
+        let group = try context.store.createGroup(name: "自定义顺序", adding: context.store.items)
+        let groupOrder = context.store.items(in: .group(group.id)).map(\.id)
+
+        try context.store.reorderItems(fromOffsets: IndexSet(integer: 0), toOffset: 3)
+
+        let expectedMasterOrder = Array(groupOrder.dropFirst()) + [groupOrder[0]]
+        #expect(context.store.items(in: .master).map(\.id) == expectedMasterOrder)
+        #expect(context.store.items(in: .group(group.id)).map(\.id) == groupOrder)
+    }
+
+    @MainActor
     @Test("组内排序不改变默认列表顺序")
     func groupOrderingIsIndependent() async throws {
         let context = try LibraryTestContext(titles: ["一", "二", "三"])
