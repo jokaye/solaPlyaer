@@ -2,10 +2,15 @@ import SwiftUI
 
 struct ImportCardView: View {
     let isEmpty: Bool
-    let action: () -> Void
+    let isImporting: Bool
+    let onAudioImport: () -> Void
+    let onFolderImport: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Menu {
+            Button("选择音频文件", systemImage: "waveform.badge.plus", action: onAudioImport)
+            Button("选择音频文件夹", systemImage: "folder.badge.plus", action: onFolderImport)
+        } label: {
             Label {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(isEmpty ? "导入第一段音频" : "导入音频")
@@ -26,11 +31,12 @@ struct ImportCardView: View {
             .padding(.vertical, 18)
         }
         .buttonStyle(.plain)
+        .disabled(isImporting)
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.card)
                 .stroke(AppColor.secondaryInk.opacity(0.38), style: StrokeStyle(lineWidth: 1.5, dash: [6]))
                 .allowsHitTesting(false)
         }
-        .accessibilityHint("打开系统文件选择器")
+        .accessibilityHint("选择导入音频文件或文件夹")
     }
 }

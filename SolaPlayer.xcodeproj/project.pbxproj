@@ -19,6 +19,7 @@
 		20DFCA57BB73B16A94849C2E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6034A78883513C490A17ED /* AboutView.swift */; };
 		210D94B9D8B1BFE277B63BBA /* TimeInterval+DurationText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22678A5C22F66B7A79564F5F /* TimeInterval+DurationText.swift */; };
 		2125D08774097D974EAA11A8 /* MarkerEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575FDC2553AC5E18824862C /* MarkerEditorSheet.swift */; };
+		22162D40B32378D911ED27EF /* AudioImportModeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CC1A08957CCEA4CFD6393C /* AudioImportModeTests.swift */; };
 		266E94E440796EB31D668E75 /* StubRemoteAudioDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C1432B1F8B7116194CF25B /* StubRemoteAudioDownloader.swift */; };
 		2810036C5D2E2F4809C629D5 /* SolaPlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE3D71C07EB57B4E39511B5 /* SolaPlayerApp.swift */; };
 		2FB85C589C976126E1C3CEB4 /* TransportControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C424562CC7026D0C00CE2338 /* TransportControls.swift */; };
@@ -111,6 +112,7 @@
 		FA063DC269FCBC3DB7CB8B43 /* AppFontToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0F6A6AF33240AF28E8988 /* AppFontToken.swift */; };
 		FA5A0238541956279C707048 /* AppInitializationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3009D312917479C602273FE6 /* AppInitializationFailureView.swift */; };
 		FE18D9A4613C362493D57F61 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73E837293DA0FF29F01618C /* SettingsView.swift */; };
+		FE4FFA83B11FA7716BE2ABB2 /* AudioDocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351B1813CAAF1F45CE54BB4A /* AudioDocumentPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +141,7 @@
 		3009D312917479C602273FE6 /* AppInitializationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInitializationFailureView.swift; sourceTree = "<group>"; };
 		329C8611F4A8EB4B0B5F367A /* MarkerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStore.swift; sourceTree = "<group>"; };
 		34BC6E5C8AA49D421AA862DF /* AudioImporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImporting.swift; sourceTree = "<group>"; };
+		351B1813CAAF1F45CE54BB4A /* AudioDocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDocumentPicker.swift; sourceTree = "<group>"; };
 		352EACA83480B06A95ABEFA7 /* SolaPlayerSchemaV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolaPlayerSchemaV2.swift; sourceTree = "<group>"; };
 		35A44EBF3BA179E7383811C6 /* PlayerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStore.swift; sourceTree = "<group>"; };
 		36F5B0BE6F4CE81F8E80ECBA /* MarkerStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerStoreError.swift; sourceTree = "<group>"; };
@@ -195,6 +198,7 @@
 		8F844AD87B095073ECE489F3 /* LibraryTestContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTestContext.swift; sourceTree = "<group>"; };
 		94AC0B1ED3005C0441DC6918 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		9575FDC2553AC5E18824862C /* MarkerEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerEditorSheet.swift; sourceTree = "<group>"; };
+		97CC1A08957CCEA4CFD6393C /* AudioImportModeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportModeTests.swift; sourceTree = "<group>"; };
 		98D36E80530AA4EFF3A67CD5 /* StagedAudioDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StagedAudioDeletion.swift; sourceTree = "<group>"; };
 		99C1432B1F8B7116194CF25B /* StubRemoteAudioDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubRemoteAudioDownloader.swift; sourceTree = "<group>"; };
 		A13AC52940D556A610E40E08 /* PresentedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentedError.swift; sourceTree = "<group>"; };
@@ -237,6 +241,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		08B82F52B2880830B1CA2E89 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				97CC1A08957CCEA4CFD6393C /* AudioImportModeTests.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
 		0D8308C70E44B4DE09FBA67F /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +265,7 @@
 		189D7EED05CA5B56EC8988B9 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				351B1813CAAF1F45CE54BB4A /* AudioDocumentPicker.swift */,
 				AB7EF9CF55F42E18D3A5089A /* GroupChipsView.swift */,
 				1E1EA9F6C7C386A9A8B1F35F /* GroupPickerRequest.swift */,
 				673B9412CDC561F8DBF29D85 /* GroupPickerSheet.swift */,
@@ -444,6 +457,7 @@
 		C1B3D409C38DAFF2137533A4 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				08B82F52B2880830B1CA2E89 /* Features */,
 				71A0097F44D3307607A88542 /* Services */,
 				7952C519E4DF1FFC0691C080 /* Stores */,
 				624FD6047230089A7B6581AC /* TestTags.swift */,
@@ -620,6 +634,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22162D40B32378D911ED27EF /* AudioImportModeTests.swift in Sources */,
 				A4EFCB41D968301E2A086ADE /* DeletionTrackingImporter.swift in Sources */,
 				EE6E17B800D6AC58B2A319EA /* FailingPersistence.swift in Sources */,
 				0D9843C4799862D8265EC1B3 /* ImportServiceDeletionRecoveryTests.swift in Sources */,
@@ -658,6 +673,7 @@
 				9C48CBF84E5E8EBEFF334E36 /* AppRadius.swift in Sources */,
 				6F0F2997610C0C8830F37BC1 /* AppSpacing.swift in Sources */,
 				7877A62614C8273C301442F3 /* AppTypography.swift in Sources */,
+				FE4FFA83B11FA7716BE2ABB2 /* AudioDocumentPicker.swift in Sources */,
 				11EE253A5682B845B1757A03 /* AudioEngine.swift in Sources */,
 				01377EC67E27C26E58563C01 /* AudioEngineError.swift in Sources */,
 				3EC34FFD5CC029C85BE3B1E2 /* AudioGroup.swift in Sources */,

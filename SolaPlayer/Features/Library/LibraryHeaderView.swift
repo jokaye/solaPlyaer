@@ -4,7 +4,8 @@ struct LibraryHeaderView: View {
     let itemCount: Int
     let groupCount: Int
     let isImporting: Bool
-    let onImport: () -> Void
+    let onAudioImport: () -> Void
+    let onFolderImport: () -> Void
     let onLinkImport: () -> Void
     let onManageGroups: () -> Void
 
@@ -38,12 +39,17 @@ struct LibraryHeaderView: View {
             .frame(width: 40, height: 40)
             .background(.primary.opacity(0.055), in: .circle)
 
-            Button("导入音频", systemImage: "plus", action: onImport)
-                .labelStyle(.iconOnly)
-                .font(.system(size: 20, weight: .regular))
-                .foregroundStyle(.primary)
-                .frame(width: 48, height: 48)
-                .background(.primary.opacity(0.065), in: .circle)
+            Menu {
+                Button("选择音频文件", systemImage: "waveform.badge.plus", action: onAudioImport)
+                Button("选择音频文件夹", systemImage: "folder.badge.plus", action: onFolderImport)
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 20, weight: .regular))
+                    .foregroundStyle(.primary)
+                    .frame(width: 48, height: 48)
+                    .background(.primary.opacity(0.065), in: .circle)
+            }
+                .accessibilityLabel("导入音频")
                 .disabled(isImporting)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -7,7 +7,7 @@ struct LibraryView: View {
     let onPlay: (AudioItem, PlaybackScope) -> Void
     let onResumePlayer: () -> Void
 
-    @State private var isShowingImporter = false
+    @State private var activeImportMode: AudioImportMode?
     @State private var isShowingLinkImporter = false
     @State private var isCreatingGroup = false
     @State private var isManagingGroups = false
@@ -47,7 +47,8 @@ struct LibraryView: View {
                     itemCount: store.items.count,
                     groupCount: store.groups.count,
                     isImporting: store.isImporting,
-                    onImport: showImporter,
+                    onAudioImport: { showImporter(.audio) },
+                    onFolderImport: { showImporter(.folder) },
                     onLinkImport: showLinkImporter,
                     onManageGroups: showManageGroups
                 )
@@ -68,7 +69,12 @@ struct LibraryView: View {
 
             Section {
                 if store.scope == .master {
-                    ImportCardView(isEmpty: store.items.isEmpty, action: showImporter)
+                    ImportCardView(
+                        isEmpty: store.items.isEmpty,
+                        isImporting: store.isImporting,
+                        onAudioImport: { showImporter(.audio) },
+                        onFolderImport: { showImporter(.folder) }
+                    )
                         .listRowInsets(
                             EdgeInsets(
                                 top: 0,
@@ -174,11 +180,12 @@ struct LibraryView: View {
 
     private var librarySheets: some View {
         libraryList
-        .fileImporter(
-            isPresented: $isShowingImporter,
-            allowedContentTypes: [.audio, .folder],
-            allowsMultipleSelection: true,
-            onCompletion: handleImportResult
+        .background(
+            AudioDocumentPicker(
+                mode: $activeImportMode,
+                onPick: importPickedURLs,
+                onFailure: present
+            )
         )
         .sheet(isPresented: $isShowingLinkImporter) {
             LinkImportSheet(onImport: importLink)
@@ -251,15 +258,15 @@ struct LibraryView: View {
         }
     }
 
-    private func showImporter() {
+    private func showCreateGroup() {
+        isCreatingGroup = true
+    }
+
+    private func showImporter(_ mode: AudioImportMode) {
         guard store.isImporting == false else {
             return
         }
-        isShowingImporter = true
-    }
-
-    private func showCreateGroup() {
-        isCreatingGroup = true
+        activeImportMode = mode
     }
 
     private func showManageGroups() {
@@ -288,10 +295,10 @@ struct LibraryView: View {
         isShowingDeleteConfirmation = true
     }
 
-    private func handleImportResult(_ result: Result<[URL], Error>) {
+    private func importPickedURLs(_ urls: [URL]) {
         Task {
             do {
-                try await store.importFiles(result.get())
+                try await store.importFiles(urls)
             } catch {
                 present(error)
             }
